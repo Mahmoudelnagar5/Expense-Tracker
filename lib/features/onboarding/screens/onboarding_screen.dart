@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/utils/clippers.dart';
+import '../../../core/utils/app_colors.dart';
+import '../../../core/utils/app_text_styles.dart';
 import '../data/models/onboarding_item.dart';
 import 'widgets/onboarding_page_content.dart';
 
@@ -18,14 +20,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     OnboardingItem(
       title: "المصاريف",
       description: "احسبها صح ... كُن على علم بمصاريفك و مصادر دخلك",
-      color: const Color(0xFF2ECC71), // Light Green
+      color: AppColors.onboardingGreen, // Light Green
       icon: Icons.account_balance_wallet,
       iconColor: Colors.green,
     ),
     OnboardingItem(
       title: "تسجيل المعاملات",
       description: "سجّل نفقاتك اليومية لتساعدك في إدارة أموالك بشكل أفضل",
-      color: const Color(0xFF4A148C), // Purple
+      color: AppColors.onboardingPurple, // Purple
       icon: Icons.edit_note,
       iconColor: Colors.deepPurple,
     ),
@@ -33,7 +35,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       title: "إدارة الميزانية",
       description:
           "احصل على تنبيهات وإشعارات عند تجاوز ميزانيتك المحددة لتجنب الإنفاق الزائد",
-      color: const Color(0xFF1565C0), // blue
+      color: AppColors.onboardingBlue, // blue
       icon: Icons.notifications_active,
       iconColor: Colors.blue,
     ),
@@ -41,7 +43,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       title: "التحليل والمتابعة",
       description:
           "تتبع مصاريفك وحلل إنفاقك من خلال رسوم بيانية مفصلة لتتأكد من عدم الإسراف",
-      color: const Color(0xFFE74C3C), //
+      color: AppColors.onboardingRed, //
       icon: Icons.analytics,
       iconColor: Colors.red,
     ),
@@ -106,11 +108,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     },
                     child: const Text(
                       "تخطي",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: AppTextStyles.font16WhiteBold,
                     ),
                   ),
                 ),
@@ -164,11 +162,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             _currentPage == _items.length - 1
                                 ? "ابدأ"
                                 : "التالي",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: AppTextStyles.font18WhiteBold,
                           ),
                         ),
                       ),

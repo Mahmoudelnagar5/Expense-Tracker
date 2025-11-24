@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../data/models/onboarding_item.dart';
+import '../../../../core/utils/app_text_styles.dart';
 
 class OnboardingPageContent extends StatelessWidget {
   final OnboardingItem item;
@@ -40,11 +41,7 @@ class OnboardingPageContent extends StatelessWidget {
 
           Text(
             item.title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-            ),
+            style: AppTextStyles.font28WhiteBold,
             textAlign: TextAlign.center,
           ),
 
@@ -52,9 +49,8 @@ class OnboardingPageContent extends StatelessWidget {
 
           Text(
             item.description,
-            style: const TextStyle(
+            style: AppTextStyles.font20WhiteRegular.copyWith(
               color: Colors.white70,
-              fontSize: 20,
               height: 1.5,
             ),
             textAlign: TextAlign.center,
