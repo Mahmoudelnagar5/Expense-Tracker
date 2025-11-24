@@ -1,0 +1,213 @@
+import 'package:flutter/material.dart';
+import '../../../core/utils/clippers.dart';
+import '../data/models/onboarding_item.dart';
+import 'widgets/onboarding_page_content.dart';
+
+class OnboardingScreen extends StatefulWidget {
+  const OnboardingScreen({super.key});
+
+  @override
+  State<OnboardingScreen> createState() => _OnboardingScreenState();
+}
+
+class _OnboardingScreenState extends State<OnboardingScreen> {
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+
+  final List<OnboardingItem> _items = [
+    OnboardingItem(
+      title: "المصاريف",
+      description: "احسبها صح ... كُن على علم بمصاريفك و مصادر دخلك",
+      color: const Color(0xFF2ECC71), // Light Green
+      icon: Icons.account_balance_wallet,
+      iconColor: Colors.green,
+    ),
+    OnboardingItem(
+      title: "تسجيل المعاملات",
+      description: "سجّل نفقاتك اليومية لتساعدك في إدارة أموالك بشكل أفضل",
+      color: const Color(0xFF4A148C), // Purple
+      icon: Icons.edit_note,
+      iconColor: Colors.deepPurple,
+    ),
+    OnboardingItem(
+      title: "إدارة الميزانية",
+      description:
+          "احصل على تنبيهات وإشعارات عند تجاوز ميزانيتك المحددة لتجنب الإنفاق الزائد",
+      color: const Color(0xFF1565C0), // blue
+      icon: Icons.notifications_active,
+      iconColor: Colors.blue,
+    ),
+    OnboardingItem(
+      title: "التحليل والمتابعة",
+      description:
+          "تتبع مصاريفك وحلل إنفاقك من خلال رسوم بيانية مفصلة لتتأكد من عدم الإسراف",
+      color: const Color(0xFFE74C3C), //
+      icon: Icons.analytics,
+      iconColor: Colors.red,
+    ),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          // Background Animation
+          AnimatedBuilder(
+            animation: _pageController,
+            builder: (context, child) {
+              int page = _pageController.hasClients
+                  ? (_pageController.page?.floor() ?? 0)
+                  : 0;
+              double offset = _pageController.hasClients
+                  ? ((_pageController.page ?? 0) - page)
+                  : 0;
+
+              return Stack(
+                children: [
+                  // Current Page Color (Base)
+                  Container(color: _items[page % _items.length].color),
+
+                  // Next Page Color (Overlay from bottom with circular reveal)
+                  if (page + 1 < _items.length)
+                    ClipPath(
+                      clipper: CircularRevealClipper(offset),
+                      child: Container(color: _items[page + 1].color),
+                    ),
+                ],
+              );
+            },
+          ),
+
+          // Content
+          SafeArea(
+            child: Column(
+              children: [
+                // Skip Button
+                Align(
+                  alignment: Alignment.topRight,
+                  child: TextButton(
+                    onPressed: () {
+                      // Navigate to home or finish onboarding
+                    },
+                    child: const Text(
+                      "تخطي",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+
+                Expanded(
+                  child: PageView.builder(
+                    controller: _pageController,
+                    itemCount: _items.length,
+                    onPageChanged: (index) {
+                      setState(() {
+                        _currentPage = index;
+                      });
+                    },
+                    itemBuilder: (context, index) {
+                      return OnboardingPageContent(item: _items[index]);
+                    },
+                  ),
+                ),
+
+                // Bottom Section: Button and Indicators
+                Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: 40,
+                    left: 20,
+                    right: 20,
+                  ),
+                  child: Column(
+                    children: [
+                      // Action Button
+                      SizedBox(
+                        width: 150,
+                        height: 50,
+                        child: OutlinedButton(
+                          onPressed: () {
+                            if (_currentPage < _items.length - 1) {
+                              _pageController.nextPage(
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.easeInOut,
+                              );
+                            } else {
+                              // Finish onboarding
+                            }
+                          },
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: Colors.white),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Text(
+                            _currentPage == _items.length - 1
+                                ? "ابدأ"
+                                : "التالي",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 40),
+
+                      // Indicators
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(_items.length, (index) {
+                          bool isActive = index == _currentPage;
+                          return AnimatedContainer(
+                            duration: const Duration(milliseconds: 300),
+                            margin: const EdgeInsets.symmetric(horizontal: 8),
+                            child: isActive
+                                ? Icon(
+                                    _items[index].icon,
+                                    color: Colors.white,
+                                    size: 24,
+                                  )
+                                : Container(
+                                    width: 12,
+                                    height: 12,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.5),
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                          );
+                        }),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
