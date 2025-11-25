@@ -1,4 +1,7 @@
+import 'package:expense_tracker_ar/core/routing/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/utils/clippers.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/app_text_styles.dart';
@@ -43,9 +46,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       title: "التحليل والمتابعة",
       description:
           "تتبع مصاريفك وحلل إنفاقك من خلال رسوم بيانية مفصلة لتتأكد من عدم الإسراف",
-      color: AppColors.onboardingRed, //
+      color: AppColors.onboardingYellow, // yellow
       icon: Icons.analytics,
-      iconColor: Colors.red,
+      iconColor: Colors.yellow,
     ),
   ];
 
@@ -102,13 +105,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 // Skip Button
                 Align(
                   alignment: Alignment.topRight,
-                  child: TextButton(
-                    onPressed: () {
-                      // Navigate to home or finish onboarding
-                    },
-                    child: const Text(
-                      "تخطي",
-                      style: AppTextStyles.font16WhiteBold,
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 10.w),
+                    child: TextButton(
+                      onPressed: () {
+                        GoRouter.of(context).go(AppRouter.setupScreen);
+                      },
+                      child: Text("تخطي", style: AppTextStyles.font16WhiteBold),
                     ),
                   ),
                 ),
@@ -130,17 +133,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                 // Bottom Section: Button and Indicators
                 Padding(
-                  padding: const EdgeInsets.only(
-                    bottom: 40,
-                    left: 20,
-                    right: 20,
+                  padding: EdgeInsets.only(
+                    bottom: 40.h,
+                    left: 20.w,
+                    right: 20.w,
                   ),
                   child: Column(
                     children: [
                       // Action Button
                       SizedBox(
-                        width: 150,
-                        height: 50,
+                        width: 150.w,
+                        height: 50.h,
                         child: OutlinedButton(
                           onPressed: () {
                             if (_currentPage < _items.length - 1) {
@@ -150,6 +153,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               );
                             } else {
                               // Finish onboarding
+                              GoRouter.of(context).go(AppRouter.setupScreen);
                             }
                           },
                           style: OutlinedButton.styleFrom(
@@ -167,7 +171,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         ),
                       ),
 
-                      const SizedBox(height: 40),
+                      SizedBox(height: 40.h),
 
                       // Indicators
                       Row(
@@ -176,16 +180,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           bool isActive = index == _currentPage;
                           return AnimatedContainer(
                             duration: const Duration(milliseconds: 300),
-                            margin: const EdgeInsets.symmetric(horizontal: 8),
+                            margin: EdgeInsets.symmetric(horizontal: 8.w),
                             child: isActive
                                 ? Icon(
                                     _items[index].icon,
                                     color: Colors.white,
-                                    size: 24,
+                                    size: 24.sp,
                                   )
                                 : Container(
-                                    width: 12,
-                                    height: 12,
+                                    width: 12.w,
+                                    height: 12.h,
                                     decoration: BoxDecoration(
                                       color: Colors.white.withOpacity(0.5),
                                       shape: BoxShape.circle,

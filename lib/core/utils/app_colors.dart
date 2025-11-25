@@ -24,8 +24,8 @@ class AppColors {
   static const Color info = Color(0xFF1565C0); // Blue
 
   // Onboarding Colors
-  static const Color onboardingGreen = Color(0xFF2ECC71);
+  static const Color onboardingGreen = Color(0xFF2EBF70);
   static const Color onboardingPurple = Color(0xFF4A148C);
   static const Color onboardingBlue = Color(0xFF1565C0);
-  static const Color onboardingRed = Color(0xFFE74C3C);
+  static const Color onboardingYellow = Color(0xFFCCBD00);
 }
