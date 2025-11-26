@@ -8,6 +8,29 @@ class AppTextStyles {
     fontWeight: FontWeightHelper.bold,
     color: Colors.black,
   );
+  static TextStyle font16BlackRegular = TextStyle(
+    fontSize: 16.sp,
+    fontWeight: FontWeightHelper.regular,
+    color: Colors.black,
+  );
+
+  static TextStyle font16BlackMedium = TextStyle(
+    fontSize: 16.sp,
+    fontWeight: FontWeightHelper.medium,
+    color: Colors.black,
+  );
+
+  static TextStyle font16BlackBold = TextStyle(
+    fontSize: 16.sp,
+    fontWeight: FontWeightHelper.bold,
+    color: Colors.black,
+  );
+
+  static TextStyle font18BlackBold = TextStyle(
+    fontSize: 18.sp,
+    fontWeight: FontWeightHelper.bold,
+    color: Colors.black,
+  );
 
   static TextStyle font32BlueBold = TextStyle(
     fontSize: 32.sp,

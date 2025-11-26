@@ -2,11 +2,11 @@ import 'package:expense_tracker_ar/core/routing/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/utils/clippers.dart';
-import '../../../core/utils/app_colors.dart';
-import '../../../core/utils/app_text_styles.dart';
-import '../data/models/onboarding_item.dart';
-import 'widgets/onboarding_page_content.dart';
+import '../../../../core/utils/clippers.dart';
+import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/app_text_styles.dart';
+import '../../data/models/onboarding_item.dart';
+import '../widgets/onboarding_page_content.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -109,7 +109,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     padding: EdgeInsets.only(right: 10.w),
                     child: TextButton(
                       onPressed: () {
-                        GoRouter.of(context).go(AppRouter.setupScreen);
+                        context.go(AppRouter.setupScreen);
                       },
                       child: Text("تخطي", style: AppTextStyles.font16WhiteBold),
                     ),
@@ -153,7 +153,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               );
                             } else {
                               // Finish onboarding
-                              GoRouter.of(context).go(AppRouter.setupScreen);
+                              context.go(AppRouter.setupScreen);
                             }
                           },
                           style: OutlinedButton.styleFrom(

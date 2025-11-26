@@ -1,0 +1,174 @@
+import 'package:animate_do/animate_do.dart';
+import 'package:expense_tracker_ar/core/widgets/custom_text_field.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/app_text_styles.dart';
+import 'save_button.dart';
+
+class CurrencyDialog extends StatefulWidget {
+  final List<Map<String, String>> currencies;
+  final String? initialValue;
+  final Function(String) onSave;
+
+  const CurrencyDialog({
+    super.key,
+    required this.currencies,
+    this.initialValue,
+    required this.onSave,
+  });
+
+  @override
+  State<CurrencyDialog> createState() => _CurrencyDialogState();
+}
+
+class _CurrencyDialogState extends State<CurrencyDialog> {
+  late String? _selectedCurrency;
+  late List<Map<String, String>> _filteredCurrencies;
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedCurrency = widget.initialValue;
+    _filteredCurrencies = widget.currencies;
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    final query = _searchController.text.toLowerCase();
+    setState(() {
+      _filteredCurrencies = widget.currencies.where((currency) {
+        final name = currency['name']!.toLowerCase();
+        final code = currency['code']!.toLowerCase();
+        return name.contains(query) || code.contains(query);
+      }).toList();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+      child: Container(
+        padding: EdgeInsets.all(15.w),
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.6,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Header
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context),
+                  color: Colors.grey,
+                ),
+                Text('اختر العملة', style: AppTextStyles.font18BlackBold),
+                SizedBox(width: 40.w), // Balance the close icon
+              ],
+            ),
+            SizedBox(height: 20.h),
+
+            // Search
+            CustomTextField(
+              controller: _searchController,
+              hintText: 'البحث عن العملة',
+              prefixIcon: Icons.search,
+            ),
+            SizedBox(height: 20.h),
+
+            // List
+            Expanded(
+              child: ListView.separated(
+                itemCount: _filteredCurrencies.length,
+                separatorBuilder: (_, __) => SizedBox(height: 10.h),
+                itemBuilder: (context, index) {
+                  final currency = _filteredCurrencies[index];
+                  final isSelected = _selectedCurrency == currency['code'];
+                  return FadeInLeft(
+                    duration: const Duration(milliseconds: 500),
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          _selectedCurrency = currency['code'];
+                        });
+                      },
+                      borderRadius: BorderRadius.circular(10.r),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 8.h,
+                          horizontal: 8.w,
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '${currency['code']} - ${currency['name']}',
+                                style: AppTextStyles.font16BlackMedium.copyWith(
+                                  fontSize: 14.sp,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 10.w),
+                            Container(
+                              width: 24.w,
+                              height: 24.h,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: isSelected
+                                      ? AppColors.onboardingBlue
+                                      : Colors.grey,
+                                  width: 2,
+                                ),
+                              ),
+                              child: isSelected
+                                  ? Center(
+                                      child: Container(
+                                        width: 12.w,
+                                        height: 12.h,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: AppColors.onboardingBlue,
+                                        ),
+                                      ),
+                                    )
+                                  : null,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: 20.h),
+
+            // Save Button
+            SaveButton(
+              onPressed: () {
+                if (_selectedCurrency != null) {
+                  widget.onSave(_selectedCurrency!);
+                  Navigator.pop(context);
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

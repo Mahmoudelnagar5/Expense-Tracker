@@ -1,12 +1,14 @@
-import 'package:expense_tracker_ar/features/onboarding/screens/onboarding_screen.dart';
+import 'package:expense_tracker_ar/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/onboarding/screens/setup_screen.dart';
+import '../../features/home/presentation/screens/home_screen.dart';
+import '../../features/onboarding/presentation/screens/setup_screen.dart';
 
 abstract class AppRouter {
   static const String onBoardingScreen = '/';
   static const String setupScreen = '/setup';
+  static const String homeScreen = '/home';
 
   static final router = GoRouter(
     initialLocation: onBoardingScreen,
@@ -24,6 +26,14 @@ abstract class AppRouter {
         path: setupScreen,
         pageBuilder: (context, state) => CustomTransitionPage(
           child: const SetupScreen(),
+          key: state.pageKey,
+          transitionsBuilder: _transitionsBuilder,
+        ),
+      ),
+      GoRoute(
+        path: homeScreen,
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: const HomeScreen(),
           key: state.pageKey,
           transitionsBuilder: _transitionsBuilder,
         ),
