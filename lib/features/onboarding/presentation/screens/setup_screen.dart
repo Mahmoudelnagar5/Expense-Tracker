@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:animate_do/animate_do.dart';
 import 'package:expense_tracker_ar/core/helper/constants/app_constants.dart';
 import 'package:expense_tracker_ar/core/helper/database/cache_helper.dart';
+import 'package:expense_tracker_ar/core/helper/database/cache_helper_keks.dart';
 import 'package:expense_tracker_ar/core/routing/app_router.dart';
 import 'package:expense_tracker_ar/core/utils/font_weight_helper.dart';
 import 'package:expense_tracker_ar/core/widgets/custom_text_field.dart';
@@ -126,26 +127,35 @@ class _SetupScreenState extends State<SetupScreen> {
 
       // Save username
       await cacheHelper.saveData(
-        key: 'username',
+        key: CacheHelperKeys.username,
         value: _usernameController.text.trim(),
       );
 
       // Save currency
-      await cacheHelper.saveData(key: 'currency', value: _selectedCurrency!);
+      await cacheHelper.saveData(
+        key: CacheHelperKeys.currency,
+        value: _selectedCurrency!,
+      );
 
       // Save language
-      await cacheHelper.saveData(key: 'language', value: _selectedLanguage!);
+      await cacheHelper.saveData(
+        key: CacheHelperKeys.language,
+        value: _selectedLanguage!,
+      );
 
       // Save image path if available
       if (_imageFile != null) {
         await cacheHelper.saveData(
-          key: 'profileImagePath',
-          value: _imageFile!.path,
+          key: CacheHelperKeys.imageProfile,
+          value: _imageFile!,
         );
       }
 
       // Mark setup as complete
-      await cacheHelper.saveData(key: 'isSetupComplete', value: true);
+      await cacheHelper.saveData(
+        key: CacheHelperKeys.isSetupComplete,
+        value: true,
+      );
 
       if (mounted) {
         // Navigate to home
