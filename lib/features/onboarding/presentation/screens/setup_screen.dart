@@ -13,6 +13,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/helper/functions/image_picker_dialog.dart';
+import '../../../../core/helper/functions/toast_helper.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_text_styles.dart';
 import '../widgets/currency_dialog.dart';
@@ -102,19 +103,22 @@ class _SetupScreenState extends State<SetupScreen> {
   Future<void> _saveUserData() async {
     // Validate form
     if (_formKey.currentState?.validate() != true) {
-      _showErrorMessage('الرجاء إدخال اسم الحساب');
+      ToastHelper.showError(
+        context,
+        message: 'الرجاء إدخال جميع البيانات المطلوبة',
+      );
       return;
     }
 
     // Validate currency selection
     if (_selectedCurrency == null) {
-      _showErrorMessage('الرجاء اختيار العملة');
+      ToastHelper.showError(context, message: 'الرجاء اختيار العملة');
       return;
     }
 
     // Validate language selection
     if (_selectedLanguage == null) {
-      _showErrorMessage('الرجاء اختيار اللغة');
+      ToastHelper.showError(context, message: 'الرجاء اختيار اللغة');
       return;
     }
 
@@ -160,16 +164,11 @@ class _SetupScreenState extends State<SetupScreen> {
       if (mounted) {
         // Navigate to home
         context.go(AppRouter.homeScreen);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('تم حفظ البيانات بنجاح'),
-            backgroundColor: Colors.green,
-          ),
-        );
+        ToastHelper.showSuccess(context, message: 'تم حفظ البيانات بنجاح');
       }
     } catch (e) {
       if (mounted) {
-        _showErrorMessage('حدث خطأ أثناء حفظ البيانات');
+        ToastHelper.showError(context, message: 'حدث خطأ أثناء حفظ البيانات');
       }
     } finally {
       if (mounted) {
@@ -178,12 +177,6 @@ class _SetupScreenState extends State<SetupScreen> {
         });
       }
     }
-  }
-
-  void _showErrorMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.red),
-    );
   }
 
   @override

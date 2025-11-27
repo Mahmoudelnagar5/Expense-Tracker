@@ -2,7 +2,7 @@ import 'package:expense_tracker_ar/features/onboarding/presentation/screens/onbo
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/home/presentation/screens/home_screen.dart';
+import '../../features/home/presentation/screens/main_screen.dart';
 import '../../features/onboarding/presentation/screens/setup_screen.dart';
 
 abstract class AppRouter {
@@ -33,7 +33,7 @@ abstract class AppRouter {
       GoRoute(
         path: homeScreen,
         pageBuilder: (context, state) => CustomTransitionPage(
-          child: const HomeScreen(),
+          child: const MainScreen(),
           key: state.pageKey,
           transitionsBuilder: _transitionsBuilder,
         ),

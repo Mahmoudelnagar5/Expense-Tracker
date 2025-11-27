@@ -22,7 +22,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     final username = CacheHelper().getData(key: CacheHelperKeys.username);
     final currency = CacheHelper().getData(key: CacheHelperKeys.currency);
     return AppBar(
-      backgroundColor: Color(0xffF1F9FC),
+      backgroundColor: Color(0xFF00BCD4),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
@@ -54,13 +54,17 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     'رمز العملة : ' + currency,
                     style: AppTextStyles.font14LightGrayRegular.copyWith(
                       fontSize: 12.sp,
+                      color: Colors.grey[600],
                     ),
                   ),
                 ],
               ),
             ],
           ),
-          IconButton(onPressed: () {}, icon: Icon(Icons.settings)),
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.settings_outlined, size: 25.sp),
+          ),
         ],
       ),
     );
