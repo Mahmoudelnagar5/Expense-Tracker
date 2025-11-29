@@ -2,7 +2,7 @@ import 'package:expense_tracker_ar/features/onboarding/presentation/screens/onbo
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/home/presentation/screens/main_screen.dart';
+import '../../features/records/presentation/screens/main_screen.dart';
 import '../../features/onboarding/presentation/screens/setup_screen.dart';
 
 abstract class AppRouter {
@@ -11,7 +11,7 @@ abstract class AppRouter {
   static const String homeScreen = '/home';
 
   static final router = GoRouter(
-    initialLocation: onBoardingScreen,
+    initialLocation: homeScreen,
     routes: [
       GoRoute(
         path: onBoardingScreen,

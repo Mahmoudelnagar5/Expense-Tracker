@@ -1,9 +1,9 @@
-import 'package:expense_tracker_ar/core/helper/functions/toast_helper.dart';
 import 'package:expense_tracker_ar/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
+import '../../../../core/helper/functions/show_add_transaction_bottom_sheet.dart';
 import '../widgets/home_app_bar.dart';
 import '../widgets/bottom_nav_bar_widget.dart';
-import 'reports_screen.dart';
+import '../../../reports/presentation/screens/reports_screen.dart';
 import 'record_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -62,7 +62,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _handleAddTransaction() {
-    // TODO: Navigate to add transaction screen
-    ToastHelper.showSuccess(context, message: 'تم إضافة معاملة جديدة');
+    showAddTransactionBottomSheet(context);
   }
 }
