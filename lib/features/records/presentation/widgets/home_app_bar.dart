@@ -44,14 +44,14 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    username,
+                    username ?? 'Username',
                     style: AppTextStyles.font16BlackBold.copyWith(
                       fontSize: 14.sp,
                     ),
                   ),
                   SizedBox(height: 5.h),
                   Text(
-                    'رمز العملة : ' + currency,
+                    'رمز العملة : ${currency.toString()}' ?? 'EGP',
                     style: AppTextStyles.font14LightGrayRegular.copyWith(
                       fontSize: 12.sp,
                       color: Colors.grey[600],

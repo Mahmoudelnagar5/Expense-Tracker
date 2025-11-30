@@ -80,10 +80,10 @@ class AppTextStyles {
     color: Colors.grey,
   );
 
-  static TextStyle font15DarkBlueMedium = TextStyle(
+  static TextStyle font15BlackMedium = TextStyle(
     fontSize: 15.sp,
     fontWeight: FontWeightHelper.medium,
-    color: Colors.blue,
+    color: Colors.black,
   );
 
   // Onboarding Styles

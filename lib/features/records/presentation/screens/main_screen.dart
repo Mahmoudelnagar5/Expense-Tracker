@@ -15,7 +15,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   late PageController _pageController;
-  int _currentIndex = 1;
+  int _currentIndex = 0;
 
   @override
   void initState() {
@@ -37,7 +37,7 @@ class _MainScreenState extends State<MainScreen> {
       body: PageView(
         controller: _pageController,
         onPageChanged: _onPageChanged,
-        children: const [ReportsScreen(), RecordScreen()],
+        children: const [RecordScreen(), ReportsScreen()],
       ),
       bottomNavigationBar: BottomNavBarWidget(
         currentIndex: _currentIndex,

@@ -36,17 +36,17 @@ class BottomNavBarWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _buildNavItem(
-                icon: Icons.description_outlined,
-                label: 'تقارير',
+                icon: Icons.receipt_long_outlined,
+                label: 'السجلات',
                 index: 0,
                 isSelected: currentIndex == 0,
                 onTap: () => onItemTapped(0),
               ),
               SizedBox(width: 80.w), // Space for FAB
               _buildNavItem(
-                icon: Icons.receipt_long_outlined,
-                label: 'السجلات',
-                index: 1,
+                icon: Icons.description_outlined,
+                label: 'تقارير',
+                index: 0,
                 isSelected: currentIndex == 1,
                 onTap: () => onItemTapped(1),
               ),
