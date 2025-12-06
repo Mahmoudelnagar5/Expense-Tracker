@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:expense_tracker_ar/core/utils/font_weight_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -38,7 +39,7 @@ class _LanguageDialogState extends State<LanguageDialog> {
       child: Container(
         padding: EdgeInsets.all(15.w),
         constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.4,
+          maxHeight: MediaQuery.of(context).size.height * 0.38,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -58,82 +59,56 @@ class _LanguageDialogState extends State<LanguageDialog> {
             ),
             SizedBox(height: 20.h),
 
-            // List
-            Expanded(
-              child: ListView.separated(
-                padding: EdgeInsets.zero,
-                itemCount: widget.languages.length,
-                separatorBuilder: (_, __) => SizedBox(height: 10.h),
-                itemBuilder: (context, index) {
-                  final language = widget.languages[index];
-                  final isSelected = _selectedLanguage == language['code'];
-                  return FadeInLeft(
-                    duration: const Duration(milliseconds: 500),
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          _selectedLanguage = language['code'];
-                        });
-                      },
-                      borderRadius: BorderRadius.circular(10.r),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 8.h,
-                          horizontal: 8.w,
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                '${language['flag']} ${language['name']}',
-                                style: AppTextStyles.font16BlackMedium.copyWith(
-                                  fontSize: 14.sp,
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 10.w),
-                            Container(
-                              width: 24.w,
-                              height: 24.h,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: isSelected
-                                      ? AppColors.onboardingBlue
-                                      : Colors.grey,
-                                  width: 2,
-                                ),
-                              ),
-                              child: isSelected
-                                  ? Center(
-                                      child: Container(
-                                        width: 12.w,
-                                        height: 12.h,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: AppColors.onboardingBlue,
-                                        ),
-                                      ),
-                                    )
-                                  : null,
-                            ),
-                          ],
+            // Language options
+            ...widget.languages.asMap().entries.map((entry) {
+              final language = entry.value;
+              return FadeInLeft(
+                duration: Duration(milliseconds: 400 + (entry.key * 100)),
+                child: RadioListTile<String>(
+                  value: language['code']!,
+                  groupValue: _selectedLanguage,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedLanguage = value;
+                    });
+                  },
+                  activeColor: AppColors.primaryBrand,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 4.w),
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        language['name']!,
+                        style: AppTextStyles.font16BlackMedium.copyWith(
+                          fontWeight: FontWeightHelper.semiBold,
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            ),
+                      SizedBox(width: 10.w),
+                      Text(
+                        language['flag']!,
+                        style: AppTextStyles.font16BlackMedium.copyWith(
+                          fontWeight: FontWeightHelper.semiBold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
+              );
+            }),
+
+            SizedBox(height: 10.h),
 
             // Save Button
-            SaveButton(
-              onPressed: () {
-                if (_selectedLanguage != null) {
-                  widget.onSave(_selectedLanguage!);
-                  Navigator.pop(context);
-                }
-              },
+            Flexible(
+              child: SaveButton(
+                onPressed: () {
+                  if (_selectedLanguage != null) {
+                    widget.onSave(_selectedLanguage!);
+                    Navigator.pop(context);
+                  }
+                },
+              ),
             ),
           ],
         ),

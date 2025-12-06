@@ -1,19 +1,36 @@
+import 'package:animate_do/animate_do.dart';
+import 'package:expense_tracker_ar/core/helper/constants/app_constants.dart';
 import 'package:expense_tracker_ar/core/helper/functions/toast_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/models/category_model.dart';
+import '../../../../core/models/transaction_model.dart';
+import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_text_styles.dart';
 import '../../../../core/widgets/form_fields/date_selector_field.dart';
 import '../../../../core/widgets/form_fields/payment_type_dropdown_field.dart';
 import '../../../../core/widgets/form_fields/amount_input_field.dart';
 import '../../../../core/widgets/form_fields/notes_input_field.dart';
-import '../../../../core/widgets/form_fields/attachment_button.dart';
+import '../../../../core/widgets/form_fields/image_attachment_section.dart';
 import '../../../../core/widgets/form_fields/form_section_label.dart';
+import '../../controller/record_cubit.dart';
+import '../../controller/transaction_form_cubit.dart';
+import '../../controller/transaction_form_state.dart';
 
 class TransactionFormWidget extends StatefulWidget {
   final CategoryModel category;
+  final TransactionModel? transaction; // For edit mode
+  final RecordCubit? recordCubit; // To refresh transactions after submit
 
-  const TransactionFormWidget({super.key, required this.category});
+  const TransactionFormWidget({
+    super.key,
+    required this.category,
+    this.transaction,
+    this.recordCubit,
+  });
+
+  bool get isEditMode => transaction != null;
 
   @override
   State<TransactionFormWidget> createState() => _TransactionFormWidgetState();
@@ -21,25 +38,12 @@ class TransactionFormWidget extends StatefulWidget {
 
 class _TransactionFormWidgetState extends State<TransactionFormWidget>
     with SingleTickerProviderStateMixin {
-  DateTime _selectedDate = DateTime.now();
-  String _selectedPaymentType = 'Cash';
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
 
   late AnimationController _animationController;
   late Animation<Offset> _slideAnimation;
   late Animation<double> _fadeAnimation;
-
-  final List<String> _paymentTypes = [
-    'Cash',
-    'Credit Card',
-    'Debit Card',
-    'Bank Transfer',
-    'UPI',
-    'Wallet',
-    'Cheque',
-    'Net Banking',
-  ];
 
   @override
   void initState() {
@@ -61,6 +65,13 @@ class _TransactionFormWidgetState extends State<TransactionFormWidget>
       CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
     );
 
+    // Initialize with existing transaction data if in edit mode
+    if (widget.isEditMode) {
+      final transaction = widget.transaction!;
+      _amountController.text = transaction.amount.toStringAsFixed(0);
+      _notesController.text = transaction.notes ?? '';
+    }
+
     _animationController.forward();
   }
 
@@ -72,17 +83,21 @@ class _TransactionFormWidgetState extends State<TransactionFormWidget>
     super.dispose();
   }
 
-  Future<void> _selectDate(BuildContext context) async {
+  Future<void> _selectDate(
+    BuildContext context,
+    TransactionFormCubit cubit,
+    DateTime currentDate,
+  ) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate,
+      initialDate: currentDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
-              primary: Color(0xFF00BCD4),
+              primary: AppColors.primaryBrand,
               onPrimary: Colors.white,
               surface: Colors.white,
               onSurface: Colors.black,
@@ -92,120 +107,151 @@ class _TransactionFormWidgetState extends State<TransactionFormWidget>
         );
       },
     );
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-      });
+    if (picked != null && picked != currentDate) {
+      cubit.setSelectedDate(picked);
     }
   }
 
-  Future<void> _handleSubmit() async {
-    // Validate amount
-    if (_amountController.text.isEmpty) {
-      ToastHelper.showError(context, message: 'الرجاء إدخال المبلغ');
-      return;
-    }
+  Future<void> _handleSubmit(TransactionFormCubit cubit) async {
+    // Update cubit with current text values
+    cubit.setAmount(_amountController.text);
+    cubit.setNotes(_notesController.text);
 
+    await cubit.submitTransaction();
+  }
+
+  Future<void> _handleSuccess() async {
     // Animate out before closing
     await _animationController.reverse();
 
-    // Close the bottom sheet and return the transaction data
+    // Refresh transactions in RecordScreen
+    widget.recordCubit?.refreshTransactions();
+
     if (mounted) {
-      Navigator.pop(context, {
-        'category': widget.category,
-        'date': _selectedDate,
-        'paymentType': _selectedPaymentType,
-        'amount': double.tryParse(_amountController.text) ?? 0.0,
-        'notes': _notesController.text,
-        'categoryType': widget.category.type,
-        'attachmentImages': null,
-      });
+      Navigator.pop(context, true); // Return true to indicate success
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return SlideTransition(
-      position: _slideAnimation,
-      child: FadeTransition(
-        opacity: _fadeAnimation,
-        child: Container(
-          height: MediaQuery.of(context).size.height * 0.85,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20.r),
-              topRight: Radius.circular(20.r),
-            ),
-          ),
-          child: Column(
-            children: [
-              // Header
-              _buildHeader(),
-              Divider(height: 1),
-
-              // Form Content
-              Expanded(
-                child: SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
-                  padding: EdgeInsets.all(20.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Date Selector
-                      FormSectionLabel(label: 'حدد التاريخ :'),
-                      SizedBox(height: 8.h),
-                      DateSelectorField(
-                        selectedDate: _selectedDate,
-                        onTap: () => _selectDate(context),
-                      ),
-                      SizedBox(height: 20.h),
-
-                      // Payment Type
-                      FormSectionLabel(label: 'نوع الدفع :'),
-                      SizedBox(height: 8.h),
-                      PaymentTypeDropdownField(
-                        selectedPaymentType: _selectedPaymentType,
-                        paymentTypes: _paymentTypes,
-                        onChanged: (value) {
-                          if (value != null) {
-                            setState(() {
-                              _selectedPaymentType = value;
-                            });
-                          }
-                        },
-                      ),
-                      SizedBox(height: 20.h),
-
-                      // Amount
-                      FormSectionLabel(label: 'كمية :'),
-                      SizedBox(height: 8.h),
-                      AmountInputField(controller: _amountController),
-                      SizedBox(height: 20.h),
-
-                      // Notes
-                      FormSectionLabel(label: 'ملحوظة (اختياري) :'),
-                      SizedBox(height: 8.h),
-                      NotesInputField(controller: _notesController),
-                      SizedBox(height: 20.h),
-
-                      // Attachment
-                      FormSectionLabel(label: 'مرفق :'),
-                      SizedBox(height: 8.h),
-                      AttachmentButton(
-                        onTap: () {
-                          ToastHelper.showInfo(context, message: 'قريبا');
-                        },
-                      ),
-                      SizedBox(height: 30.h),
-
-                      // Submit Button
-                      _buildSubmitButton(),
-                    ],
-                  ),
+    return BlocProvider(
+      create: (context) => TransactionFormCubit(
+        category: widget.category,
+        transaction: widget.transaction,
+      ),
+      child: SlideTransition(
+        position: _slideAnimation,
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: FadeInUp(
+            duration: const Duration(milliseconds: 500),
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.85,
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20.r),
+                  topRight: Radius.circular(20.r),
                 ),
               ),
-            ],
+              child: BlocConsumer<TransactionFormCubit, TransactionFormState>(
+                listener: (context, state) {
+                  if (state.status == TransactionFormStatus.success) {
+                    ToastHelper.showSuccess(
+                      context,
+                      message: state.isEditMode
+                          ? 'تم التعديل بنجاح'
+                          : 'تم الحفظ بنجاح',
+                    );
+                    _handleSuccess();
+                  } else if (state.status == TransactionFormStatus.failure) {
+                    ToastHelper.showError(
+                      context,
+                      message: state.errorMessage ?? 'حدث خطأ',
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  final cubit = context.read<TransactionFormCubit>();
+
+                  return Column(
+                    children: [
+                      // Header
+                      _buildHeader(),
+                      Divider(height: 1),
+
+                      // Form Content
+                      Expanded(
+                        child: SingleChildScrollView(
+                          physics: BouncingScrollPhysics(),
+                          padding: EdgeInsets.all(20.w),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Date Selector
+                              FormSectionLabel(label: 'حدد التاريخ :'),
+                              SizedBox(height: 8.h),
+                              DateSelectorField(
+                                selectedDate: state.selectedDate,
+                                onTap: () => _selectDate(
+                                  context,
+                                  cubit,
+                                  state.selectedDate,
+                                ),
+                              ),
+                              SizedBox(height: 20.h),
+
+                              // Payment Type
+                              FormSectionLabel(label: 'نوع الدفع :'),
+                              SizedBox(height: 8.h),
+                              PaymentTypeDropdownField(
+                                selectedPaymentType: state.selectedPaymentType,
+                                paymentTypes: AppConstants.paymentTypes,
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    cubit.setPaymentType(value);
+                                  }
+                                },
+                              ),
+                              SizedBox(height: 20.h),
+
+                              // Amount
+                              FormSectionLabel(label: 'كمية :'),
+                              SizedBox(height: 8.h),
+                              AmountInputField(controller: _amountController),
+                              SizedBox(height: 20.h),
+
+                              // Notes
+                              FormSectionLabel(label: 'ملحوظة (اختياري) :'),
+                              SizedBox(height: 8.h),
+                              NotesInputField(controller: _notesController),
+                              SizedBox(height: 20.h),
+
+                              // Attachment
+                              FormSectionLabel(label: 'مرفق :'),
+                              SizedBox(height: 8.h),
+                              ImageAttachmentSection(
+                                images: state.attachmentImages,
+                                onImageAdded: (imagePath) {
+                                  cubit.addImage(imagePath);
+                                },
+                                onImageRemoved: (index) {
+                                  cubit.removeImage(index);
+                                },
+                              ),
+                              SizedBox(height: 30.h),
+
+                              // Submit Button
+                              _buildSubmitButton(cubit, state),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
           ),
         ),
       ),
@@ -217,10 +263,16 @@ class _TransactionFormWidgetState extends State<TransactionFormWidget>
       padding: EdgeInsets.all(16.w),
       child: Row(
         children: [
-          Text('إضافة معاملة', style: AppTextStyles.font16BlackBold),
+          Text(
+            widget.isEditMode ? 'تعديل معاملة' : 'إضافة معاملة',
+            style: AppTextStyles.font16BlackBold.copyWith(
+              fontSize: 18.sp,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+          ),
           Spacer(),
           IconButton(
-            icon: Icon(Icons.close, color: Colors.grey[600]),
+            icon: Icon(Icons.close, color: Colors.grey[600], size: 20.sp),
             onPressed: () async {
               await _animationController.reverse();
               if (mounted) {
@@ -233,19 +285,35 @@ class _TransactionFormWidgetState extends State<TransactionFormWidget>
     );
   }
 
-  Widget _buildSubmitButton() {
+  Widget _buildSubmitButton(
+    TransactionFormCubit cubit,
+    TransactionFormState state,
+  ) {
     return SizedBox(
       width: double.infinity,
       height: 50.h,
       child: ElevatedButton(
-        onPressed: _handleSubmit,
+        onPressed: state.isSubmitting ? null : () => _handleSubmit(cubit),
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color(0xFF00BCD4),
+          shadowColor: AppColors.gradientG3_1,
+          backgroundColor: AppColors.primaryBrand,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.r),
           ),
         ),
-        child: Text('إضافة', style: AppTextStyles.font16WhiteSemiBold),
+        child: state.isSubmitting
+            ? SizedBox(
+                width: 24.w,
+                height: 24.h,
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                  strokeWidth: 2,
+                ),
+              )
+            : Text(
+                state.isEditMode ? 'تعديل' : 'إضافة',
+                style: AppTextStyles.font16WhiteSemiBold,
+              ),
       ),
     );
   }

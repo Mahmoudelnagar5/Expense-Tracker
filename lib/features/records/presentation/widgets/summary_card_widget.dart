@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/helper/constants/app_constants.dart';
+import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_text_styles.dart';
 
 class SummaryCardWidget extends StatelessWidget {
@@ -18,6 +20,10 @@ class SummaryCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final curr = AppConstants.currencies.firstWhere(
+      (c) => c['code'] == currency,
+      orElse: () => {'symbol': ''},
+    );
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
       child: Row(
@@ -25,20 +31,20 @@ class SummaryCardWidget extends StatelessWidget {
         children: [
           _buildSummaryItem(
             label: 'دخل',
-            amount: '$incomeAmount $currency',
+            amount: '$incomeAmount ${(curr['symbol'] ?? currency)}',
             color: Colors.green,
           ),
           _buildDivider(),
           _buildSummaryItem(
             label: 'النفقات',
-            amount: '$expenseAmount $currency',
+            amount: '$expenseAmount ${curr['symbol'] ?? currency}',
             color: Colors.red,
           ),
           _buildDivider(),
           _buildSummaryItem(
             label: 'المجموع',
-            amount: '$totalAmount $currency',
-            color: const Color(0xFF00BCD4),
+            amount: '$totalAmount ${curr['symbol'] ?? currency}',
+            color: AppColors.primaryBrand,
           ),
         ],
       ),
@@ -50,24 +56,31 @@ class SummaryCardWidget extends StatelessWidget {
     required String amount,
     required Color color,
   }) {
-    return Expanded(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            label,
-            style: AppTextStyles.font16BlackBold.copyWith(fontSize: 14.sp),
+    return Builder(
+      builder: (context) {
+        return Expanded(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                label,
+                style: AppTextStyles.font16BlackBold.copyWith(
+                  fontSize: 14.sp,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+              ),
+              SizedBox(height: 4.h),
+              Text(
+                amount,
+                style: AppTextStyles.font16BlackBold.copyWith(
+                  fontSize: 14.sp,
+                  color: color,
+                ),
+              ),
+            ],
           ),
-          SizedBox(height: 4.h),
-          Text(
-            amount,
-            style: AppTextStyles.font16BlackBold.copyWith(
-              fontSize: 14.sp,
-              color: color,
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 

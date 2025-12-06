@@ -48,7 +48,10 @@ class _CurrencyDialogState extends State<CurrencyDialog> {
       _filteredCurrencies = widget.currencies.where((currency) {
         final name = currency['name']!.toLowerCase();
         final code = currency['code']!.toLowerCase();
-        return name.contains(query) || code.contains(query);
+        final symbol = currency['symbol']!.toLowerCase();
+        return name.contains(query) ||
+            code.contains(query) ||
+            symbol.contains(query);
       }).toList();
     });
   }
@@ -129,7 +132,7 @@ class _CurrencyDialogState extends State<CurrencyDialog> {
                                 shape: BoxShape.circle,
                                 border: Border.all(
                                   color: isSelected
-                                      ? AppColors.onboardingBlue
+                                      ? AppColors.primaryLight
                                       : Colors.grey,
                                   width: 2,
                                 ),
@@ -141,7 +144,7 @@ class _CurrencyDialogState extends State<CurrencyDialog> {
                                         height: 12.h,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
-                                          color: AppColors.onboardingBlue,
+                                          color: AppColors.primaryLight,
                                         ),
                                       ),
                                     )

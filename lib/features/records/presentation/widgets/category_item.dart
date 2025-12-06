@@ -18,6 +18,8 @@ class CategoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12.r),
@@ -29,14 +31,16 @@ class CategoryItem extends StatelessWidget {
             height: 56.w,
             decoration: BoxDecoration(
               color: isSelected
-                  ? Color(0xFF00BCD4).withValues(alpha: .16)
-                  : Colors.grey[200],
+                  ? Theme.of(context).colorScheme.primary.withOpacity(.13)
+                  : (isDark ? const Color(0xFF253342) : Colors.grey[200]),
               shape: BoxShape.circle,
             ),
             child: Icon(
               category.icon,
               size: 28.sp,
-              color: isSelected ? Color(0xFF00BCD4) : Colors.grey[700],
+              color: isSelected
+                  ? Theme.of(context).colorScheme.primary
+                  : (isDark ? const Color(0xFFB8C5D6) : Colors.grey[700]),
             ),
           ),
           SizedBox(height: 8.h),
@@ -46,7 +50,10 @@ class CategoryItem extends StatelessWidget {
               category.name,
               style: AppTextStyles.font14LightGrayRegular.copyWith(
                 fontSize: 12.sp,
-                color: isSelected ? Color(0xFF00BCD4) : Colors.black87,
+                fontWeight: FontWeight.w500,
+                color: isSelected
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.onSurface,
               ),
               textAlign: TextAlign.center,
               maxLines: 2,

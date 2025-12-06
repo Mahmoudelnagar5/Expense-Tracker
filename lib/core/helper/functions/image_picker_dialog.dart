@@ -13,6 +13,7 @@ void showImagePickerDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
           'اختر مصدر الصورة',
           style: AppTextStyles.font16BlackBold,
@@ -24,7 +25,7 @@ void showImagePickerDialog(
             ListTile(
               leading: Icon(
                 Icons.camera_alt,
-                color: AppColors.onboardingBlue,
+                color: AppColors.primaryBrand,
                 size: 28.sp,
               ),
               title: Text('الكاميرا', style: AppTextStyles.font16BlackBold),
@@ -33,7 +34,7 @@ void showImagePickerDialog(
             ListTile(
               leading: Icon(
                 Icons.photo_library,
-                color: AppColors.onboardingBlue,
+                color: AppColors.primaryBrand,
                 size: 28.sp,
               ),
               title: Text('المعرض', style: AppTextStyles.font16BlackBold),

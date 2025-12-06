@@ -151,7 +151,7 @@ class _SetupScreenState extends State<SetupScreen> {
       if (_imageFile != null) {
         await cacheHelper.saveData(
           key: CacheHelperKeys.imageProfile,
-          value: _imageFile!,
+          value: _imageFile!.path,
         );
       }
 
@@ -170,6 +170,7 @@ class _SetupScreenState extends State<SetupScreen> {
       if (mounted) {
         ToastHelper.showError(context, message: 'حدث خطأ أثناء حفظ البيانات');
       }
+      debugPrint(e.toString());
     } finally {
       if (mounted) {
         setState(() {
@@ -239,7 +240,7 @@ class _SetupScreenState extends State<SetupScreen> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10.r),
-                        border: Border.all(color: Colors.blue),
+                        border: Border.all(color: AppColors.primaryLight),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -256,7 +257,10 @@ class _SetupScreenState extends State<SetupScreen> {
                                   : Colors.black,
                             ),
                           ),
-                          const Icon(Icons.arrow_drop_down, color: Colors.blue),
+                          const Icon(
+                            Icons.arrow_drop_down,
+                            color: AppColors.primaryLight,
+                          ),
                         ],
                       ),
                     ),
@@ -278,7 +282,7 @@ class _SetupScreenState extends State<SetupScreen> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10.r),
-                        border: Border.all(color: Colors.blue),
+                        border: Border.all(color: AppColors.primaryLight),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -295,7 +299,10 @@ class _SetupScreenState extends State<SetupScreen> {
                                   : Colors.black,
                             ),
                           ),
-                          const Icon(Icons.arrow_drop_down, color: Colors.blue),
+                          const Icon(
+                            Icons.arrow_drop_down,
+                            color: AppColors.primaryLight,
+                          ),
                         ],
                       ),
                     ),
@@ -309,12 +316,12 @@ class _SetupScreenState extends State<SetupScreen> {
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _saveUserData,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.onboardingBlue,
+                      backgroundColor: AppColors.primaryBrand,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.r),
                       ),
                       elevation: 5,
-                      shadowColor: AppColors.onboardingBlue.withOpacity(0.5),
+                      shadowColor: AppColors.gradientG3_1,
                     ),
                     child: _isLoading
                         ? const CircularProgressIndicator(color: Colors.white)

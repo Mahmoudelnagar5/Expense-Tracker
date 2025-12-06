@@ -1,6 +1,7 @@
-import 'package:expense_tracker_ar/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/helper/functions/show_add_transaction_bottom_sheet.dart';
+import '../../controller/record_cubit.dart';
 import '../widgets/home_app_bar.dart';
 import '../widgets/bottom_nav_bar_widget.dart';
 import '../../../reports/presentation/screens/reports_screen.dart';
@@ -15,34 +16,40 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   late PageController _pageController;
+  late RecordCubit _recordCubit;
   int _currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _currentIndex);
+    _recordCubit = RecordCubit()..loadTransactions();
   }
 
   @override
   void dispose() {
     _pageController.dispose();
+    _recordCubit.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundLight,
-      appBar: HomeAppBar(),
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: _onPageChanged,
-        children: const [RecordScreen(), ReportsScreen()],
-      ),
-      bottomNavigationBar: BottomNavBarWidget(
-        currentIndex: _currentIndex,
-        onAddPressed: _handleAddTransaction,
-        onItemTapped: _onItemTapped,
+    return BlocProvider.value(
+      value: _recordCubit,
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        appBar: HomeAppBar(),
+        body: PageView(
+          controller: _pageController,
+          onPageChanged: _onPageChanged,
+          children: [const RecordScreen(), const ReportsScreen()],
+        ),
+        bottomNavigationBar: BottomNavBarWidget(
+          currentIndex: _currentIndex,
+          onAddPressed: _handleAddTransaction,
+          onItemTapped: _onItemTapped,
+        ),
       ),
     );
   }
@@ -61,7 +68,7 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  void _handleAddTransaction() {
-    showAddTransactionBottomSheet(context);
+  void _handleAddTransaction() async {
+    await showAddTransactionBottomSheet(context, recordCubit: _recordCubit);
   }
 }

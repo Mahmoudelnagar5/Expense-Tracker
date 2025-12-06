@@ -23,32 +23,32 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     OnboardingItem(
       title: "المصاريف",
       description: "احسبها صح ... كُن على علم بمصاريفك و مصادر دخلك",
-      color: AppColors.onboardingGreen, // Light Green
+      color: AppColors.onboardingGreen, // Purple
       icon: Icons.account_balance_wallet,
-      iconColor: Colors.green,
+      iconColor: AppColors.onboardingGreen,
     ),
     OnboardingItem(
       title: "تسجيل المعاملات",
       description: "سجّل نفقاتك اليومية لتساعدك في إدارة أموالك بشكل أفضل",
-      color: AppColors.onboardingPurple, // Purple
+      color: AppColors.secondaryDarkBrand, // Purple
       icon: Icons.edit_note,
-      iconColor: Colors.deepPurple,
+      iconColor: AppColors.secondaryDarkBrand,
     ),
     OnboardingItem(
       title: "إدارة الميزانية",
       description:
           "احصل على تنبيهات وإشعارات عند تجاوز ميزانيتك المحددة لتجنب الإنفاق الزائد",
-      color: AppColors.onboardingBlue, // blue
+      color: AppColors.primaryBrand, // blue
       icon: Icons.notifications_active,
-      iconColor: Colors.blue,
+      iconColor: AppColors.primaryBrand,
     ),
     OnboardingItem(
       title: "التحليل والمتابعة",
       description:
           "تتبع مصاريفك وحلل إنفاقك من خلال رسوم بيانية مفصلة لتتأكد من عدم الإسراف",
-      color: AppColors.onboardingYellow, // yellow
+      color: AppColors.systemYellow, // yellow
       icon: Icons.analytics,
-      iconColor: Colors.yellow,
+      iconColor: AppColors.systemYellow,
     ),
   ];
 

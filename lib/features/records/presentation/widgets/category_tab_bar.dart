@@ -10,37 +10,31 @@ class CategoryTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: isDark ? const Color(0xFF253342) : Colors.grey[100],
         borderRadius: BorderRadius.circular(25.r),
       ),
       child: TabBar(
         controller: controller,
         indicator: BoxDecoration(
-          color: const Color(0xFF00BCD4),
+          color: Theme.of(context).colorScheme.primary,
           borderRadius: BorderRadius.circular(25.r),
         ),
         indicatorSize: TabBarIndicatorSize.tab,
         labelColor: Colors.white,
-        unselectedLabelColor: Colors.grey[600],
+        unselectedLabelColor: isDark
+            ? const Color(0xFFB8C5D6)
+            : Colors.grey[600],
         labelStyle: AppTextStyles.font16BlackBold,
-        unselectedLabelStyle: AppTextStyles.font16BlackRegular,
+        unselectedLabelStyle: AppTextStyles.font16BlackBold,
         dividerColor: Colors.transparent,
         tabs: [
-          Expanded(
-            child: _buildTab(
-              icon: Icons.account_balance_wallet_outlined,
-              label: 'دخل',
-            ),
-          ),
-          Expanded(
-            child: _buildTab(
-              icon: Icons.receipt_long_outlined,
-              label: 'النفقات',
-            ),
-          ),
+          _buildTab(icon: Icons.account_balance_wallet_outlined, label: 'دخل'),
+          _buildTab(icon: Icons.receipt_long_outlined, label: 'النفقات'),
         ],
       ),
     );

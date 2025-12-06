@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:expense_tracker_ar/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -38,7 +39,7 @@ class ImageProfile extends StatelessWidget {
             ),
             child: Icon(
               Icons.camera_alt,
-              color: const Color(0xff03A9F5),
+              color: AppColors.primaryBrand,
               size: 20.r,
             ),
           ),

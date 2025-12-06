@@ -1,5 +1,7 @@
+import 'package:expense_tracker_ar/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../utils/app_colors.dart';
 import '../../utils/app_text_styles.dart';
 
 /// Notes input field widget
@@ -11,30 +13,34 @@ class NotesInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(12.r),
+        color: context.isDarkMode
+            ? const Color(0xFF253342)
+            : AppColors.gradientG10_1,
+        borderRadius: BorderRadius.circular(16.r),
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(Icons.notes, color: Color(0xFF00BCD4), size: 20.sp),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: TextField(
-              controller: controller,
-              maxLines: 2,
-              textAlign: TextAlign.right,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: 'أضف ملاحظة',
-                hintStyle: AppTextStyles.font14LightGrayRegular,
-              ),
-              style: AppTextStyles.font15BlackMedium,
+      child: Expanded(
+        child: TextField(
+          controller: controller,
+          maxLines: 1,
+          textAlign: TextAlign.right,
+          cursorColor: AppColors.primaryBrand,
+          decoration: InputDecoration(
+            prefixIcon: Icon(
+              Icons.notes,
+              color: AppColors.primaryBrand,
+              size: 20.sp,
             ),
+            border: InputBorder.none,
+
+            hintText: 'أضف ملاحظة',
+            hintStyle: AppTextStyles.font14LightGrayRegular,
           ),
-        ],
+          style: AppTextStyles.font15BlackMedium.copyWith(
+            fontSize: 14.5.sp,
+            color: context.textColor,
+          ),
+        ),
       ),
     );
   }

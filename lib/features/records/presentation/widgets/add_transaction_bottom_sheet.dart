@@ -1,13 +1,17 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/models/category_model.dart';
+import '../../controller/record_cubit.dart';
 import 'bottom_sheet_header.dart';
 import 'category_tab_bar.dart';
 import 'category_grid.dart';
 import 'transaction_form_widget.dart';
 
 class AddTransactionBottomSheet extends StatefulWidget {
-  const AddTransactionBottomSheet({super.key});
+  final RecordCubit? recordCubit;
+
+  const AddTransactionBottomSheet({super.key, this.recordCubit});
 
   @override
   State<AddTransactionBottomSheet> createState() =>
@@ -63,23 +67,26 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet>
     super.dispose();
   }
 
-  void _onCategorySelected(int index, CategoryModel category) {
+  void _onCategorySelected(int index, CategoryModel category) async {
     setState(() {
       _selectedCategoryIndex = index;
     });
 
     // Show transaction form
-    showModalBottomSheet(
+    final result = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => TransactionFormWidget(category: category),
-    ).then((result) {
-      if (result != null) {
-        print('Transaction data: $result');
-        _closeWithAnimation();
-      }
-    });
+      builder: (context) => TransactionFormWidget(
+        category: category,
+        recordCubit: widget.recordCubit,
+      ),
+    );
+
+    // If transaction was added successfully, close this bottom sheet too
+    if (result == true) {
+      await _closeWithAnimation();
+    }
   }
 
   Future<void> _closeWithAnimation() async {
@@ -95,37 +102,41 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet>
       position: _slideAnimation,
       child: FadeTransition(
         opacity: _fadeAnimation,
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20.r),
-              topRight: Radius.circular(20.r),
-            ),
-          ),
-          child: Column(
-            children: [
-              BottomSheetHeader(onClose: _closeWithAnimation),
-              CategoryTabBar(controller: _tabController),
-              Expanded(
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    CategoryGrid(
-                      categories: IncomeCategories.categories,
-                      selectedIndex: _selectedCategoryIndex,
-                      onCategorySelected: _onCategorySelected,
-                    ),
-                    CategoryGrid(
-                      categories: ExpenseCategories.categories,
-                      selectedIndex: _selectedCategoryIndex,
-                      onCategorySelected: _onCategorySelected,
-                    ),
-                  ],
-                ),
+        child: FadeInUp(
+          duration: Duration(milliseconds: 700),
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            decoration: BoxDecoration(
+              // color: Theme.of(context).cardTheme.color,
+              color: Theme.of(context).scaffoldBackgroundColor,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20.r),
+                topRight: Radius.circular(20.r),
               ),
-            ],
+            ),
+            child: Column(
+              children: [
+                BottomSheetHeader(onClose: _closeWithAnimation),
+                CategoryTabBar(controller: _tabController),
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      CategoryGrid(
+                        categories: IncomeCategories.categories,
+                        selectedIndex: _selectedCategoryIndex,
+                        onCategorySelected: _onCategorySelected,
+                      ),
+                      CategoryGrid(
+                        categories: ExpenseCategories.categories,
+                        selectedIndex: _selectedCategoryIndex,
+                        onCategorySelected: _onCategorySelected,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

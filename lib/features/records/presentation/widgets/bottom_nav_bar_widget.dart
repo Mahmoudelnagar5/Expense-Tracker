@@ -1,3 +1,5 @@
+import 'package:expense_tracker_ar/core/utils/app_colors.dart';
+import 'package:expense_tracker_ar/core/utils/font_weight_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/utils/app_text_styles.dart';
@@ -16,13 +18,15 @@ class BottomNavBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       height: 70.h,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).scaffoldBackgroundColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withOpacity(isDark ? 0.3 : 0.05),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
@@ -36,6 +40,7 @@ class BottomNavBarWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _buildNavItem(
+                context: context,
                 icon: Icons.receipt_long_outlined,
                 label: 'السجلات',
                 index: 0,
@@ -44,6 +49,7 @@ class BottomNavBarWidget extends StatelessWidget {
               ),
               SizedBox(width: 80.w), // Space for FAB
               _buildNavItem(
+                context: context,
                 icon: Icons.description_outlined,
                 label: 'تقارير',
                 index: 0,
@@ -62,15 +68,16 @@ class BottomNavBarWidget extends StatelessWidget {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF00BCD4).withOpacity(0.3),
-                    blurRadius: 15,
-                    spreadRadius: 2,
+                    color: AppColors.gradientG3_1,
+                    offset: const Offset(0, 1),
+                    blurRadius: 12,
+                    spreadRadius: 1.2,
                   ),
                 ],
               ),
               child: FloatingActionButton(
                 onPressed: onAddPressed,
-                backgroundColor: const Color(0xFF00BCD4),
+                backgroundColor: AppColors.primaryBrand,
                 elevation: 0,
                 child: Icon(Icons.add, size: 32.sp, color: Colors.white),
               ),
@@ -82,13 +89,17 @@ class BottomNavBarWidget extends StatelessWidget {
   }
 
   Widget _buildNavItem({
+    required BuildContext context,
     required IconData icon,
     required String label,
     required int index,
     required bool isSelected,
     required VoidCallback onTap,
   }) {
-    final color = isSelected ? const Color(0xFF00BCD4) : Colors.grey[400];
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final color = isSelected
+        ? Theme.of(context).colorScheme.primary
+        : (isDark ? const Color(0xFF6B7A8F) : Colors.grey[700]);
 
     return InkWell(
       onTap: onTap,
@@ -104,9 +115,10 @@ class BottomNavBarWidget extends StatelessWidget {
             Text(
               label,
               style: AppTextStyles.font14LightGrayRegular.copyWith(
-                fontSize: 12.sp,
                 color: color,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                fontWeight: isSelected
+                    ? FontWeightHelper.bold
+                    : FontWeightHelper.medium,
               ),
             ),
           ],

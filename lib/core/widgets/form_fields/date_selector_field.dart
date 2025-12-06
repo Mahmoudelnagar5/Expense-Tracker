@@ -1,3 +1,5 @@
+import 'package:expense_tracker_ar/core/theme/theme_extensions.dart';
+import 'package:expense_tracker_ar/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -22,17 +24,26 @@ class DateSelectorField extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
         decoration: BoxDecoration(
-          color: Colors.grey[100],
+          color: context.themeColor(
+            light: AppColors.neutralSoftGrey2,
+            dark: const Color(0xFF253342),
+          ),
           borderRadius: BorderRadius.circular(12.r),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Icon(Icons.calendar_today, color: Color(0xFF00BCD4), size: 20.sp),
+            Icon(
+              Icons.calendar_today,
+              color: AppColors.primaryBrand,
+              size: 20.sp,
+            ),
             SizedBox(width: 12.w),
             Text(
               DateFormat('dd نوفمبر yyyy', 'ar').format(selectedDate),
-              style: AppTextStyles.font15BlackMedium,
+              style: AppTextStyles.font15BlackMedium.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
             ),
           ],
         ),

@@ -12,7 +12,6 @@ class FormSectionLabel extends StatelessWidget {
     return Text(
       label,
       style: AppTextStyles.font14LightGrayRegular.copyWith(
-        color: Colors.black87,
         fontWeight: FontWeight.w500,
       ),
     );

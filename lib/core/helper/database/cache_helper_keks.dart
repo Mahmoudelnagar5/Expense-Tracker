@@ -4,4 +4,8 @@ class CacheHelperKeys {
   static const String currency = 'currency';
   static const String language = 'language';
   static const String isSetupComplete = 'isSetupComplete';
+  static const String theme = 'theme';
+  static const String reminderEnabled = 'reminderEnabled';
+  static const String reminderHour = 'reminderHour';
+  static const String reminderMinute = 'reminderMinute';
 }

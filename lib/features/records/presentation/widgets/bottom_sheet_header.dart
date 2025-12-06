@@ -10,15 +10,26 @@ class BottomSheetHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text('اختر الفئة', style: AppTextStyles.font16BlackBold),
+          Text(
+            'اختر الفئة',
+            style: AppTextStyles.font18BlackBold.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+          ),
           IconButton(
             onPressed: onClose ?? () => Navigator.pop(context),
-            icon: Icon(Icons.close, color: Colors.grey[600], size: 20.sp),
+            icon: Icon(
+              Icons.close,
+              color: isDark ? const Color(0xFFB8C5D6) : Colors.grey[600],
+              size: 20.sp,
+            ),
           ),
         ],
       ),
