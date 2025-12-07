@@ -1,6 +1,8 @@
 import 'package:expense_tracker_ar/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:expense_tracker_ar/core/utils/locale_keys.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_text_styles.dart';
 
@@ -14,16 +16,16 @@ class NotesInputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: context.isDarkMode
-            ? const Color(0xFF253342)
-            : AppColors.gradientG10_1,
+        color: context.themeColor(
+          light: AppColors.neutralSoftGrey2,
+          dark: const Color(0xFF253342),
+        ),
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Expanded(
         child: TextField(
           controller: controller,
           maxLines: 1,
-          textAlign: TextAlign.right,
           cursorColor: AppColors.primaryBrand,
           decoration: InputDecoration(
             prefixIcon: Icon(
@@ -33,7 +35,7 @@ class NotesInputField extends StatelessWidget {
             ),
             border: InputBorder.none,
 
-            hintText: 'أضف ملاحظة',
+            hintText: LocaleKeys.addNote.tr(),
             hintStyle: AppTextStyles.font14LightGrayRegular,
           ),
           style: AppTextStyles.font15BlackMedium.copyWith(

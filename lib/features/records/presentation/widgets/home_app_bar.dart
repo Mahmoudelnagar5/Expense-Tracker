@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/helper/constants/app_constants.dart';
@@ -10,6 +12,8 @@ import '../../../../core/helper/database/cache_helper_keks.dart';
 import '../../../../core/routing/app_router.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_text_styles.dart';
+import '../../../../core/utils/locale_keys.dart';
+import '../../../settings/presentation/controller/settings_cubit.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
@@ -19,13 +23,12 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     final imageProfilePath = CacheHelper().getData(
       key: CacheHelperKeys.imageProfile,
     );
-    final imageFile = imageProfilePath != null && imageProfilePath is String
-        ? File(imageProfilePath)
-        : null;
-    debugPrint('imageFile: $imageProfilePath');
-
+    File? imageFile;
+    if (imageProfilePath != null && imageProfilePath is String) {
+      imageFile = File(imageProfilePath);
+    }
     final username = CacheHelper().getData(key: CacheHelperKeys.username);
-    final currency = CacheHelper().getData(key: CacheHelperKeys.currency);
+    final currency = context.watch<SettingsCubit>().state.currency ?? 'USD';
     final currencySymbol = AppConstants.currencies.firstWhere(
       (c) => c['code'] == currency,
       orElse: () => {'symbol': ''},
@@ -58,6 +61,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                       : null,
                 ),
               ),
+
               SizedBox(width: 10.w),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,7 +78,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                   SizedBox(height: 5.h),
                   Text(
-                    'رمز العملة : ${currencySymbol['symbol']}',
+                    '${LocaleKeys.currencySymbol.tr()} : ${currencySymbol['symbol']}',
                     style: AppTextStyles.font14LightGrayRegular.copyWith(
                       fontSize: 12.sp,
                       color: isDark

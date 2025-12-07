@@ -1,17 +1,18 @@
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:expense_tracker_ar/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' as intl;
 
-import '../../../../core/helper/database/cache_helper.dart';
-import '../../../../core/helper/database/cache_helper_keks.dart';
 import '../../../../core/helper/enums/date_filter_type.dart';
 import '../../../../core/helper/functions/toast_helper.dart';
 import '../../../../core/models/transaction_model.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_text_styles.dart';
+import '../../../../core/utils/locale_keys.dart';
 import '../../../../core/utils/font_weight_helper.dart';
+import '../../../settings/presentation/controller/controller.dart';
 import '../../controller/record_cubit.dart';
 import '../../controller/record_state.dart';
 import 'date_selector_widget.dart';
@@ -23,14 +24,19 @@ import 'transaction_list_item.dart';
 class RecordScreenContent extends StatelessWidget {
   const RecordScreenContent({super.key});
 
-  String _getFormattedDate(DateTime selectedDate, DateFilterType filterType) {
+  String _getFormattedDate(
+    BuildContext context,
+    DateTime selectedDate,
+    DateFilterType filterType,
+  ) {
+    final locale = context.locale.languageCode;
     switch (filterType) {
       case DateFilterType.day:
-        return DateFormat('d MMMM، yyyy', 'ar').format(selectedDate);
+        return intl.DateFormat('d MMMM، yyyy', locale).format(selectedDate);
       case DateFilterType.month:
-        return DateFormat('MMMM، yyyy', 'ar').format(selectedDate);
+        return intl.DateFormat('MMMM، yyyy', locale).format(selectedDate);
       case DateFilterType.year:
-        return DateFormat('yyyy', 'ar').format(selectedDate);
+        return intl.DateFormat('yyyy', locale).format(selectedDate);
     }
   }
 
@@ -44,12 +50,17 @@ class RecordScreenContent extends StatelessWidget {
       },
       builder: (context, state) {
         final cubit = context.read<RecordCubit>();
-
+        // watch currency changes from SettingsCubit
+        final currency = context.watch<SettingsCubit>().state.currency ?? 'USD';
         return Column(
           children: [
             // Date Selector
             DateSelectorWidget(
-              dateText: _getFormattedDate(state.selectedDate, state.filterType),
+              dateText: _getFormattedDate(
+                context,
+                state.selectedDate,
+                state.filterType,
+              ),
               onPreviousDate: cubit.goToPreviousDate,
               onNextDate: cubit.goToNextDate,
               onFilterPressed: () =>
@@ -65,7 +76,7 @@ class RecordScreenContent extends StatelessWidget {
               incomeAmount: state.totalIncome.toStringAsFixed(0),
               expenseAmount: state.totalExpense.toStringAsFixed(0),
               totalAmount: state.totalBalance.toStringAsFixed(0),
-              currency: CacheHelper().getData(key: CacheHelperKeys.currency),
+              currency: currency,
             ),
 
             // Divider
@@ -76,8 +87,8 @@ class RecordScreenContent extends StatelessWidget {
               child: state.isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : state.transactions.isEmpty
-                  ? const EmptyStateWidget(message: 'لا يوجد بيانات')
-                  : _buildTransactionList(context, state, cubit),
+                  ? EmptyStateWidget(message: LocaleKeys.noData.tr())
+                  : _buildTransactionList(context, state, cubit, currency),
             ),
           ],
         );
@@ -89,26 +100,29 @@ class RecordScreenContent extends StatelessWidget {
     BuildContext context,
     RecordState state,
     RecordCubit cubit,
+    String currency,
   ) {
     // Group transactions by date
     final groupedTransactions = <String, List<TransactionModel>>{};
+    final locale = context.locale.languageCode;
 
     // Determine the date format based on filter type
     String dateFormat;
     switch (state.filterType) {
       case DateFilterType.year:
-        dateFormat =
-            'MMMM، yyyy'; // Show only month and year when filtering by year
+        dateFormat = 'MMMM، yyyy';
         break;
       case DateFilterType.month:
       case DateFilterType.day:
-        dateFormat =
-            'd MMMM، yyyy'; // Show day, month, and year for other filters
+        dateFormat = 'd MMMM، yyyy';
         break;
     }
 
     for (var transaction in state.transactions) {
-      final dateKey = DateFormat(dateFormat, 'ar').format(transaction.dateTime);
+      final dateKey = DateFormat(
+        dateFormat,
+        locale,
+      ).format(transaction.dateTime);
       if (!groupedTransactions.containsKey(dateKey)) {
         groupedTransactions[dateKey] = [];
       }
@@ -148,6 +162,7 @@ class RecordScreenContent extends StatelessWidget {
             ...transactions.map(
               (transaction) => TransactionListItem(
                 transaction: transaction,
+                currency: currency,
                 onEdit: () =>
                     _handleEditTransaction(context, transaction, cubit),
                 onDelete: () =>
@@ -177,7 +192,7 @@ class RecordScreenContent extends StatelessWidget {
       initialDate: state.selectedDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
-      locale: const Locale('ar', 'AE'),
+      locale: context.locale,
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
@@ -208,17 +223,16 @@ class RecordScreenContent extends StatelessWidget {
       builder: (dialogContext) => AlertDialog(
         backgroundColor: context.backgroundColor,
         title: Text(
-          'فلترة حسب',
+          LocaleKeys.filterBy.tr(),
           style: AppTextStyles.font18BlackBold.copyWith(
             color: Theme.of(context).colorScheme.onSurface,
           ),
-          textAlign: TextAlign.right,
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: DateFilterType.values.map((type) {
             return RadioListTile<DateFilterType>(
-              title: Text(type.arabicName, textAlign: TextAlign.right),
+              title: Text(type.arabicName),
               value: type,
               groupValue: state.filterType,
               activeColor: AppColors.primaryBrand,
@@ -234,7 +248,10 @@ class RecordScreenContent extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: Text('إلغاء', style: AppTextStyles.font13BlueSemiBold),
+            child: Text(
+              LocaleKeys.cancel.tr(),
+              style: AppTextStyles.font13BlueSemiBold,
+            ),
           ),
         ],
       ),
@@ -266,28 +283,27 @@ class RecordScreenContent extends StatelessWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        backgroundColor: Colors.white,
+        backgroundColor: context.backgroundColor,
         title: Text(
-          'حذف المعاملة',
-          textAlign: TextAlign.right,
+          LocaleKeys.deleteTransactionTitle.tr(),
           style: AppTextStyles.font16BlackMedium,
         ),
         content: Text(
-          'هل أنت متأكد من حذف هذه المعاملة؟',
-          textAlign: TextAlign.right,
-          style: AppTextStyles.font14GrayRegular.copyWith(
-            color: Colors.grey[800],
-          ),
+          LocaleKeys.deleteTransactionMessage.tr(),
+          style: AppTextStyles.font14GrayRegular,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, false),
-            child: Text('إلغاء', style: AppTextStyles.font13BlueSemiBold),
+            child: Text(
+              LocaleKeys.cancel.tr(),
+              style: AppTextStyles.font13BlueSemiBold,
+            ),
           ),
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, true),
             child: Text(
-              'حذف',
+              LocaleKeys.delete.tr(),
               style: AppTextStyles.font13BlueSemiBold.copyWith(
                 color: Colors.red,
                 fontWeight: FontWeightHelper.bold,
@@ -302,11 +318,17 @@ class RecordScreenContent extends StatelessWidget {
       try {
         await cubit.deleteTransaction(transaction.id!);
         if (context.mounted) {
-          ToastHelper.showSuccess(context, message: 'تم حذف المعاملة بنجاح');
+          ToastHelper.showSuccess(
+            context,
+            message: LocaleKeys.deletedSuccessfully.tr(),
+          );
         }
       } catch (e) {
         if (context.mounted) {
-          ToastHelper.showError(context, message: 'حدث خطأ أثناء حذف المعاملة');
+          ToastHelper.showError(
+            context,
+            message: LocaleKeys.errorDeleting.tr(),
+          );
         }
       }
     }

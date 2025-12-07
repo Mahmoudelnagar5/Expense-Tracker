@@ -1,10 +1,13 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:expense_tracker_ar/core/theme/theme_extensions.dart';
 import 'package:expense_tracker_ar/core/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_text_styles.dart';
+import '../../../../core/utils/locale_keys.dart';
 import 'save_button.dart';
 
 class CurrencyDialog extends StatefulWidget {
@@ -59,7 +62,7 @@ class _CurrencyDialogState extends State<CurrencyDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: Colors.white,
+      backgroundColor: context.backgroundColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
       child: Container(
         padding: EdgeInsets.all(15.w),
@@ -78,7 +81,10 @@ class _CurrencyDialogState extends State<CurrencyDialog> {
                   onPressed: () => Navigator.pop(context),
                   color: Colors.grey,
                 ),
-                Text('اختر العملة', style: AppTextStyles.font18BlackBold),
+                Text(
+                  LocaleKeys.chooseCurrency.tr(),
+                  style: AppTextStyles.font18BlackBold,
+                ),
                 SizedBox(width: 40.w), // Balance the close icon
               ],
             ),
@@ -87,7 +93,7 @@ class _CurrencyDialogState extends State<CurrencyDialog> {
             // Search
             CustomTextField(
               controller: _searchController,
-              hintText: 'البحث عن العملة',
+              hintText: LocaleKeys.searchCurrency.tr(),
               prefixIcon: Icons.search,
             ),
             SizedBox(height: 20.h),
@@ -126,8 +132,8 @@ class _CurrencyDialogState extends State<CurrencyDialog> {
                             ),
                             SizedBox(width: 10.w),
                             Container(
-                              width: 24.w,
-                              height: 24.h,
+                              width: 21.w,
+                              height: 21.h,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border: Border.all(

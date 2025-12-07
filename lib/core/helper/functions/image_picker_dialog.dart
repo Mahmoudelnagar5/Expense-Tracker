@@ -1,8 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:expense_tracker_ar/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../utils/app_text_styles.dart';
+import '../../utils/locale_keys.dart';
 
 void showImagePickerDialog(
   BuildContext context, {
@@ -15,7 +17,7 @@ void showImagePickerDialog(
       return AlertDialog(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
-          'اختر مصدر الصورة',
+          LocaleKeys.selectImageSource.tr(),
           style: AppTextStyles.font16BlackBold,
           textAlign: TextAlign.center,
         ),
@@ -28,7 +30,10 @@ void showImagePickerDialog(
                 color: AppColors.primaryBrand,
                 size: 28.sp,
               ),
-              title: Text('الكاميرا', style: AppTextStyles.font16BlackBold),
+              title: Text(
+                LocaleKeys.camera.tr(),
+                style: AppTextStyles.font16BlackBold,
+              ),
               onTap: onTapCamera,
             ),
             ListTile(
@@ -37,7 +42,10 @@ void showImagePickerDialog(
                 color: AppColors.primaryBrand,
                 size: 28.sp,
               ),
-              title: Text('المعرض', style: AppTextStyles.font16BlackBold),
+              title: Text(
+                LocaleKeys.gallery.tr(),
+                style: AppTextStyles.font16BlackBold,
+              ),
               onTap: onTapGallery,
             ),
           ],

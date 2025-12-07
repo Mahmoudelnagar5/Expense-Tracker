@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:expense_tracker_ar/core/utils/locale_keys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/utils/app_text_styles.dart';
@@ -33,8 +35,14 @@ class CategoryTabBar extends StatelessWidget {
         unselectedLabelStyle: AppTextStyles.font16BlackBold,
         dividerColor: Colors.transparent,
         tabs: [
-          _buildTab(icon: Icons.account_balance_wallet_outlined, label: 'دخل'),
-          _buildTab(icon: Icons.receipt_long_outlined, label: 'النفقات'),
+          _buildTab(
+            icon: Icons.account_balance_wallet_outlined,
+            label: LocaleKeys.incomeLabel.tr(),
+          ),
+          _buildTab(
+            icon: Icons.receipt_long_outlined,
+            label: LocaleKeys.expensesLabel.tr(),
+          ),
         ],
       ),
     );

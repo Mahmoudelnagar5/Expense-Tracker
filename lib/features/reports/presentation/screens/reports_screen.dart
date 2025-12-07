@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:expense_tracker_ar/core/utils/locale_keys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -13,7 +15,7 @@ class ReportsScreen extends StatelessWidget {
           Icon(Icons.pie_chart_outline, size: 100.sp, color: Colors.grey[400]),
           SizedBox(height: 20.h),
           Text(
-            'شاشة التقارير',
+            LocaleKeys.reportsScreen.tr(),
             style: TextStyle(
               fontSize: 20.sp,
               fontWeight: FontWeight.bold,
@@ -22,7 +24,7 @@ class ReportsScreen extends StatelessWidget {
           ),
           SizedBox(height: 10.h),
           Text(
-            'قريباً',
+            LocaleKeys.comingSoon.tr(),
             style: TextStyle(fontSize: 16.sp, color: Colors.grey[500]),
           ),
         ],

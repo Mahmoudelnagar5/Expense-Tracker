@@ -1,4 +1,7 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:expense_tracker_ar/core/utils/locale_keys.dart';
+import 'package:expense_tracker_ar/core/theme/theme_extensions.dart';
 import 'package:expense_tracker_ar/core/utils/font_weight_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -34,7 +37,7 @@ class _LanguageDialogState extends State<LanguageDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: Colors.white,
+      backgroundColor: context.backgroundColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
       child: Container(
         padding: EdgeInsets.all(15.w),
@@ -53,7 +56,10 @@ class _LanguageDialogState extends State<LanguageDialog> {
                   onPressed: () => Navigator.pop(context),
                   color: Colors.grey,
                 ),
-                Text('اختر اللغة', style: AppTextStyles.font18BlackBold),
+                Text(
+                  LocaleKeys.chooseLanguage.tr(),
+                  style: AppTextStyles.font18BlackBold,
+                ),
                 SizedBox(width: 40.w), // Balance the close icon
               ],
             ),

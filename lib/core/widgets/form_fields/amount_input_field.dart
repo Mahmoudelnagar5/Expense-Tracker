@@ -1,8 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../theme/theme_extensions.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_text_styles.dart';
+import '../../utils/locale_keys.dart';
 
 /// Amount input field widget
 class AmountInputField extends StatelessWidget {
@@ -14,33 +17,32 @@ class AmountInputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: context.isDarkMode
-            ? const Color(0xFF253342)
-            : AppColors.gradientG10_1,
+        color: context.themeColor(
+          light: AppColors.neutralSoftGrey2,
+          dark: const Color(0xFF253342),
+        ),
         borderRadius: BorderRadius.circular(16.r),
       ),
-      child: Expanded(
-        child: TextField(
-          controller: controller,
-          keyboardType: TextInputType.numberWithOptions(decimal: true),
-          textAlign: TextAlign.right,
+      child: TextField(
+        controller: controller,
+        keyboardType: TextInputType.numberWithOptions(decimal: true),
 
-          cursorColor: AppColors.primaryBrand,
-          decoration: InputDecoration(
-            prefixIcon: Icon(
-              Icons.attach_money,
-              color: AppColors.primaryBrand,
-              size: 20.sp,
-            ),
-            border: InputBorder.none,
+        // textAlign: TextAlign.right,
+        cursorColor: AppColors.primaryBrand,
+        decoration: InputDecoration(
+          prefixIcon: Icon(
+            Icons.attach_money,
+            color: AppColors.primaryBrand,
+            size: 20.sp,
+          ),
+          border: InputBorder.none,
 
-            hintText: 'إضافة المبلغ',
-            hintStyle: AppTextStyles.font14LightGrayRegular,
-          ),
-          style: AppTextStyles.font15BlackMedium.copyWith(
-            fontSize: 16.sp,
-            color: context.textColor,
-          ),
+          hintText: LocaleKeys.enterAmountField.tr(),
+          hintStyle: AppTextStyles.font14LightGrayRegular,
+        ),
+        style: AppTextStyles.font15BlackMedium.copyWith(
+          fontSize: 16.sp,
+          color: context.textColor,
         ),
       ),
     );

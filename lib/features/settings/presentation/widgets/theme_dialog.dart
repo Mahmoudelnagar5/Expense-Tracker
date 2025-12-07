@@ -1,9 +1,12 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/theme/theme_extensions.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_text_styles.dart';
+import '../../../../core/utils/locale_keys.dart';
 import '../../../onboarding/presentation/widgets/save_button.dart';
 
 class ThemeDialog extends StatefulWidget {
@@ -19,26 +22,35 @@ class ThemeDialog extends StatefulWidget {
 class _ThemeDialogState extends State<ThemeDialog> {
   late String? _selectedTheme;
 
-  final List<Map<String, dynamic>> _themes = [
-    {'name': 'وضع الإضاءة', 'code': 'light', 'icon': Icons.light_mode},
-    {'name': 'الوضع الليلي', 'code': 'dark', 'icon': Icons.dark_mode},
-    {
-      'name': 'تلقائي (حسب النظام)',
-      'code': 'system',
-      'icon': Icons.brightness_auto,
-    },
-  ];
+  late final List<Map<String, dynamic>> _themes;
 
   @override
   void initState() {
     super.initState();
     _selectedTheme = widget.initialValue ?? 'light';
+    _themes = [
+      {
+        'name': LocaleKeys.lightMode.tr(),
+        'code': 'light',
+        'icon': Icons.light_mode,
+      },
+      {
+        'name': LocaleKeys.darkMode.tr(),
+        'code': 'dark',
+        'icon': Icons.dark_mode,
+      },
+      {
+        'name': LocaleKeys.systemTheme.tr(),
+        'code': 'system',
+        'icon': Icons.brightness_auto,
+      },
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: Colors.white,
+      backgroundColor: context.backgroundColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
       child: Container(
         padding: EdgeInsets.all(15.w),
@@ -57,7 +69,10 @@ class _ThemeDialogState extends State<ThemeDialog> {
                   onPressed: () => Navigator.pop(context),
                   color: Colors.grey,
                 ),
-                Text('مواضيع التطبيق', style: AppTextStyles.font18BlackBold),
+                Text(
+                  LocaleKeys.appThemes.tr(),
+                  style: AppTextStyles.font18BlackBold,
+                ),
                 SizedBox(width: 40.w),
               ],
             ),
@@ -82,7 +97,7 @@ class _ThemeDialogState extends State<ThemeDialog> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
-                        theme['name'],
+                        theme['name']!,
                         style: AppTextStyles.font16BlackMedium.copyWith(
                           fontSize: 14.sp,
                         ),

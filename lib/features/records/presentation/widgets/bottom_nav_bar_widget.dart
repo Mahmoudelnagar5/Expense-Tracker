@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:expense_tracker_ar/core/utils/app_colors.dart';
 import 'package:expense_tracker_ar/core/utils/font_weight_helper.dart';
+import 'package:expense_tracker_ar/core/utils/locale_keys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/utils/app_text_styles.dart';
@@ -42,7 +44,7 @@ class BottomNavBarWidget extends StatelessWidget {
               _buildNavItem(
                 context: context,
                 icon: Icons.receipt_long_outlined,
-                label: 'السجلات',
+                label: LocaleKeys.records.tr(),
                 index: 0,
                 isSelected: currentIndex == 0,
                 onTap: () => onItemTapped(0),
@@ -51,7 +53,7 @@ class BottomNavBarWidget extends StatelessWidget {
               _buildNavItem(
                 context: context,
                 icon: Icons.description_outlined,
-                label: 'تقارير',
+                label: LocaleKeys.reports.tr(),
                 index: 0,
                 isSelected: currentIndex == 1,
                 onTap: () => onItemTapped(1),

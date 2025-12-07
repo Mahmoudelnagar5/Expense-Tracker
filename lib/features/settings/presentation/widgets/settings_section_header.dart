@@ -12,15 +12,12 @@ class SettingsSectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: Text(
-          title,
-          style: AppTextStyles.font14GrayRegular.copyWith(
-            fontSize: 14.5.sp,
-            fontWeight: FontWeight.w500,
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-          ),
+      child: Text(
+        title,
+        style: AppTextStyles.font14GrayRegular.copyWith(
+          fontSize: 14.5.sp,
+          fontWeight: FontWeight.w500,
+          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
         ),
       ),
     );

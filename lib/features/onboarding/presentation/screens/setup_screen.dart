@@ -1,11 +1,13 @@
 import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:expense_tracker_ar/core/helper/constants/app_constants.dart';
 import 'package:expense_tracker_ar/core/helper/database/cache_helper.dart';
 import 'package:expense_tracker_ar/core/helper/database/cache_helper_keks.dart';
 import 'package:expense_tracker_ar/core/routing/app_router.dart';
 import 'package:expense_tracker_ar/core/utils/font_weight_helper.dart';
+import 'package:expense_tracker_ar/core/utils/localization_helper.dart';
 import 'package:expense_tracker_ar/core/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,8 +16,10 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/helper/functions/image_picker_dialog.dart';
 import '../../../../core/helper/functions/toast_helper.dart';
+import '../../../../core/theme/theme_extensions.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_text_styles.dart';
+import '../../../../core/utils/locale_keys.dart';
 import '../widgets/currency_dialog.dart';
 import '../widgets/image_profile.dart';
 import '../widgets/language_dialog.dart';
@@ -105,20 +109,26 @@ class _SetupScreenState extends State<SetupScreen> {
     if (_formKey.currentState?.validate() != true) {
       ToastHelper.showError(
         context,
-        message: 'الرجاء إدخال جميع البيانات المطلوبة',
+        message: LocaleKeys.pleaseEnterAllRequiredData.tr(),
       );
       return;
     }
 
     // Validate currency selection
     if (_selectedCurrency == null) {
-      ToastHelper.showError(context, message: 'الرجاء اختيار العملة');
+      ToastHelper.showError(
+        context,
+        message: LocaleKeys.pleaseChooseCurrency.tr(),
+      );
       return;
     }
 
     // Validate language selection
     if (_selectedLanguage == null) {
-      ToastHelper.showError(context, message: 'الرجاء اختيار اللغة');
+      ToastHelper.showError(
+        context,
+        message: LocaleKeys.pleaseChooseLanguage.tr(),
+      );
       return;
     }
 
@@ -164,11 +174,19 @@ class _SetupScreenState extends State<SetupScreen> {
       if (mounted) {
         // Navigate to home
         context.go(AppRouter.homeScreen);
-        ToastHelper.showSuccess(context, message: 'تم حفظ البيانات بنجاح');
+
+        await LocalizationHelper.switchLanguage(context, _selectedLanguage!);
+        ToastHelper.showSuccess(
+          context,
+          message: LocaleKeys.dataSavedSuccessfully.tr(),
+        );
       }
     } catch (e) {
       if (mounted) {
-        ToastHelper.showError(context, message: 'حدث خطأ أثناء حفظ البيانات');
+        ToastHelper.showError(
+          context,
+          message: LocaleKeys.errorSavingData.tr(),
+        );
       }
       debugPrint(e.toString());
     } finally {
@@ -183,7 +201,7 @@ class _SetupScreenState extends State<SetupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: context.backgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
@@ -204,29 +222,33 @@ class _SetupScreenState extends State<SetupScreen> {
                 SizedBox(height: 20.h),
                 Center(
                   child: Text(
-                    "اضافة الملف الشخصي",
-                    style: AppTextStyles.font24BlackBold.copyWith(
-                      fontWeight: FontWeightHelper.extraBold,
-                    ),
+                    LocaleKeys.addProfilePicture.tr(),
+                    style: AppTextStyles.font24BlackBold,
                   ),
                 ),
                 SizedBox(height: 30.h),
 
-                Text("إختر اسماً لحسابك", style: AppTextStyles.font16BlackBold),
+                Text(
+                  LocaleKeys.chooseUsername.tr(),
+                  style: AppTextStyles.font16BlackBold,
+                ),
                 SizedBox(height: 10.h),
                 CustomTextField(
                   controller: _usernameController,
-                  hintText: "اسم الحساب",
+                  hintText: LocaleKeys.accountName.tr(),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'الرجاء إدخال اسم الحساب';
+                      return LocaleKeys.pleaseEnterAccountName.tr();
                     }
                     return null;
                   },
                 ),
 
                 SizedBox(height: 20.h),
-                Text("اختر العملة", style: AppTextStyles.font16BlackBold),
+                Text(
+                  LocaleKeys.chooseCurrency.tr(),
+                  style: AppTextStyles.font16BlackBold,
+                ),
                 SizedBox(height: 10.h),
                 FadeInLeft(
                   duration: const Duration(milliseconds: 500),
@@ -238,7 +260,10 @@ class _SetupScreenState extends State<SetupScreen> {
                         vertical: 15.h,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: context.themeColor(
+                          light: AppColors.neutralSoftGrey2,
+                          dark: const Color(0xFF253342),
+                        ),
                         borderRadius: BorderRadius.circular(10.r),
                         border: Border.all(color: AppColors.primaryLight),
                       ),
@@ -250,12 +275,25 @@ class _SetupScreenState extends State<SetupScreen> {
                                 ? AppConstants.currencies.firstWhere(
                                     (c) => c['code'] == _selectedCurrency,
                                   )['name']!
-                                : "اختر العملة",
-                            style: AppTextStyles.font16BlackMedium.copyWith(
-                              color: _selectedCurrency == null
-                                  ? Colors.grey
-                                  : Colors.black,
-                            ),
+                                : LocaleKeys.chooseCurrency.tr(),
+                            style: context.isDarkMode
+                                ? (AppTextStyles.font14LightGrayRegular
+                                      .copyWith(
+                                        fontSize: _selectedCurrency == null
+                                            ? 14.sp
+                                            : 16.sp,
+                                        fontWeight: _selectedCurrency == null
+                                            ? FontWeightHelper.regular
+                                            : FontWeightHelper.medium,
+                                      ))
+                                : AppTextStyles.font16BlackMedium.copyWith(
+                                    fontSize: _selectedCurrency == null
+                                        ? 14.sp
+                                        : 16.sp,
+                                    fontWeight: _selectedCurrency == null
+                                        ? FontWeightHelper.regular
+                                        : FontWeightHelper.medium,
+                                  ),
                           ),
                           const Icon(
                             Icons.arrow_drop_down,
@@ -268,7 +306,10 @@ class _SetupScreenState extends State<SetupScreen> {
                 ),
 
                 SizedBox(height: 20.h),
-                Text("اختر اللغة", style: AppTextStyles.font16BlackBold),
+                Text(
+                  LocaleKeys.chooseLanguage.tr(),
+                  style: AppTextStyles.font16BlackBold,
+                ),
                 SizedBox(height: 10.h),
                 FadeInLeft(
                   duration: const Duration(milliseconds: 500),
@@ -280,7 +321,10 @@ class _SetupScreenState extends State<SetupScreen> {
                         vertical: 15.h,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: context.themeColor(
+                          light: AppColors.neutralSoftGrey2,
+                          dark: const Color(0xFF253342),
+                        ),
                         borderRadius: BorderRadius.circular(10.r),
                         border: Border.all(color: AppColors.primaryLight),
                       ),
@@ -292,12 +336,25 @@ class _SetupScreenState extends State<SetupScreen> {
                                 ? AppConstants.languages.firstWhere(
                                     (l) => l['code'] == _selectedLanguage,
                                   )['name']!
-                                : "اختر اللغة",
-                            style: AppTextStyles.font16BlackMedium.copyWith(
-                              color: _selectedLanguage == null
-                                  ? Colors.grey
-                                  : Colors.black,
-                            ),
+                                : LocaleKeys.chooseLanguage.tr(),
+                            style: context.isDarkMode
+                                ? (AppTextStyles.font14LightGrayRegular
+                                      .copyWith(
+                                        fontSize: _selectedLanguage == null
+                                            ? 14.sp
+                                            : 16.sp,
+                                        fontWeight: _selectedLanguage == null
+                                            ? FontWeightHelper.regular
+                                            : FontWeightHelper.medium,
+                                      ))
+                                : AppTextStyles.font16BlackMedium.copyWith(
+                                    fontSize: _selectedLanguage == null
+                                        ? 14.sp
+                                        : 16.sp,
+                                    fontWeight: _selectedLanguage == null
+                                        ? FontWeightHelper.regular
+                                        : FontWeightHelper.medium,
+                                  ),
                           ),
                           const Icon(
                             Icons.arrow_drop_down,
@@ -326,7 +383,7 @@ class _SetupScreenState extends State<SetupScreen> {
                     child: _isLoading
                         ? const CircularProgressIndicator(color: Colors.white)
                         : Text(
-                            "ابدا الان",
+                            LocaleKeys.startNow.tr(),
                             style: AppTextStyles.font18WhiteBold,
                           ),
                   ),

@@ -63,15 +63,18 @@ class SettingsTile extends StatelessWidget {
                   ),
                   if (subtitle != null) ...[
                     SizedBox(height: 4.h),
-                    Text(
-                      subtitle!,
-                      style: AppTextStyles.font14GrayRegular.copyWith(
-                        fontSize: 12.sp,
-                        color: isDark
-                            ? const Color(0xFFB8C5D6)
-                            : Colors.grey[600],
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        subtitle!,
+                        style: AppTextStyles.font14GrayRegular.copyWith(
+                          fontSize: 12.sp,
+                          color: isDark
+                              ? const Color(0xFFB8C5D6)
+                              : Colors.grey[600],
+                        ),
+                        textAlign: TextAlign.right,
                       ),
-                      textAlign: TextAlign.right,
                     ),
                   ],
                 ],

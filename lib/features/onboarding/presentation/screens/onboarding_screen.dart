@@ -42,14 +42,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       icon: Icons.notifications_active,
       iconColor: AppColors.primaryBrand,
     ),
-    OnboardingItem(
-      title: "التحليل والمتابعة",
-      description:
-          "تتبع مصاريفك وحلل إنفاقك من خلال رسوم بيانية مفصلة لتتأكد من عدم الإسراف",
-      color: AppColors.systemYellow, // yellow
-      icon: Icons.analytics,
-      iconColor: AppColors.systemYellow,
-    ),
+    // OnboardingItem(
+    //   title: "التحليل والمتابعة",
+    //   description:
+    //       "تتبع مصاريفك وحلل إنفاقك من خلال رسوم بيانية مفصلة لتتأكد من عدم الإسراف",
+    //   color: AppColors.systemYellow, // yellow
+    //   icon: Icons.analytics,
+    //   iconColor: AppColors.systemYellow,
+    // ),
   ];
 
   @override

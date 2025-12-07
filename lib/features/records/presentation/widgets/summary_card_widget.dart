@@ -1,8 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/helper/constants/app_constants.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_text_styles.dart';
+import '../../../../core/utils/locale_keys.dart';
 
 class SummaryCardWidget extends StatelessWidget {
   final String incomeAmount;
@@ -30,19 +32,19 @@ class SummaryCardWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           _buildSummaryItem(
-            label: 'دخل',
+            label: LocaleKeys.incomeLabel.tr(),
             amount: '$incomeAmount ${(curr['symbol'] ?? currency)}',
             color: Colors.green,
           ),
           _buildDivider(),
           _buildSummaryItem(
-            label: 'النفقات',
+            label: LocaleKeys.expensesLabel.tr(),
             amount: '$expenseAmount ${curr['symbol'] ?? currency}',
             color: Colors.red,
           ),
           _buildDivider(),
           _buildSummaryItem(
-            label: 'المجموع',
+            label: LocaleKeys.totalLabel.tr(),
             amount: '$totalAmount ${curr['symbol'] ?? currency}',
             color: AppColors.primaryBrand,
           ),

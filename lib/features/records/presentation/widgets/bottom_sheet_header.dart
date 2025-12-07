@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/utils/app_text_styles.dart';
+import '../../../../core/utils/locale_keys.dart';
 
 /// Header widget for the bottom sheet with title and close button
 class BottomSheetHeader extends StatelessWidget {
@@ -18,7 +20,7 @@ class BottomSheetHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'اختر الفئة',
+            LocaleKeys.selectCategory.tr(),
             style: AppTextStyles.font18BlackBold.copyWith(
               color: Theme.of(context).colorScheme.onSurface,
             ),

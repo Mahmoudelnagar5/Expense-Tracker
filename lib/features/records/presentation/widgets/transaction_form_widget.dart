@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:expense_tracker_ar/core/helper/constants/app_constants.dart';
 import 'package:expense_tracker_ar/core/helper/functions/toast_helper.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import '../../../../core/models/category_model.dart';
 import '../../../../core/models/transaction_model.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_text_styles.dart';
+import '../../../../core/utils/locale_keys.dart';
 import '../../../../core/widgets/form_fields/date_selector_field.dart';
 import '../../../../core/widgets/form_fields/payment_type_dropdown_field.dart';
 import '../../../../core/widgets/form_fields/amount_input_field.dart';
@@ -160,14 +162,15 @@ class _TransactionFormWidgetState extends State<TransactionFormWidget>
                     ToastHelper.showSuccess(
                       context,
                       message: state.isEditMode
-                          ? 'تم التعديل بنجاح'
-                          : 'تم الحفظ بنجاح',
+                          ? LocaleKeys.updatedSuccessfully.tr()
+                          : LocaleKeys.savedSuccessfully.tr(),
                     );
                     _handleSuccess();
                   } else if (state.status == TransactionFormStatus.failure) {
                     ToastHelper.showError(
                       context,
-                      message: state.errorMessage ?? 'حدث خطأ',
+                      message:
+                          state.errorMessage ?? LocaleKeys.errorOccurred.tr(),
                     );
                   }
                 },
@@ -189,7 +192,9 @@ class _TransactionFormWidgetState extends State<TransactionFormWidget>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               // Date Selector
-                              FormSectionLabel(label: 'حدد التاريخ :'),
+                              FormSectionLabel(
+                                label: LocaleKeys.selectDateLabel.tr(),
+                              ),
                               SizedBox(height: 8.h),
                               DateSelectorField(
                                 selectedDate: state.selectedDate,
@@ -202,7 +207,9 @@ class _TransactionFormWidgetState extends State<TransactionFormWidget>
                               SizedBox(height: 20.h),
 
                               // Payment Type
-                              FormSectionLabel(label: 'نوع الدفع :'),
+                              FormSectionLabel(
+                                label: LocaleKeys.paymentTypeLabel.tr(),
+                              ),
                               SizedBox(height: 8.h),
                               PaymentTypeDropdownField(
                                 selectedPaymentType: state.selectedPaymentType,
@@ -216,19 +223,25 @@ class _TransactionFormWidgetState extends State<TransactionFormWidget>
                               SizedBox(height: 20.h),
 
                               // Amount
-                              FormSectionLabel(label: 'كمية :'),
+                              FormSectionLabel(
+                                label: LocaleKeys.amountLabel.tr(),
+                              ),
                               SizedBox(height: 8.h),
                               AmountInputField(controller: _amountController),
                               SizedBox(height: 20.h),
 
                               // Notes
-                              FormSectionLabel(label: 'ملحوظة (اختياري) :'),
+                              FormSectionLabel(
+                                label: LocaleKeys.noteOptionalLabel.tr(),
+                              ),
                               SizedBox(height: 8.h),
                               NotesInputField(controller: _notesController),
                               SizedBox(height: 20.h),
 
                               // Attachment
-                              FormSectionLabel(label: 'مرفق :'),
+                              FormSectionLabel(
+                                label: LocaleKeys.attachmentLabel.tr(),
+                              ),
                               SizedBox(height: 8.h),
                               ImageAttachmentSection(
                                 images: state.attachmentImages,
@@ -264,7 +277,9 @@ class _TransactionFormWidgetState extends State<TransactionFormWidget>
       child: Row(
         children: [
           Text(
-            widget.isEditMode ? 'تعديل معاملة' : 'إضافة معاملة',
+            widget.isEditMode
+                ? LocaleKeys.editTransaction.tr()
+                : LocaleKeys.addTransaction.tr(),
             style: AppTextStyles.font16BlackBold.copyWith(
               fontSize: 18.sp,
               color: Theme.of(context).colorScheme.onSurface,
@@ -311,7 +326,7 @@ class _TransactionFormWidgetState extends State<TransactionFormWidget>
                 ),
               )
             : Text(
-                state.isEditMode ? 'تعديل' : 'إضافة',
+                state.isEditMode ? LocaleKeys.edit.tr() : LocaleKeys.add.tr(),
                 style: AppTextStyles.font16WhiteSemiBold,
               ),
       ),

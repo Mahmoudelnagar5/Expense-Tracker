@@ -1,4 +1,7 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:expense_tracker_ar/core/utils/locale_keys.dart';
+import 'package:expense_tracker_ar/core/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/app_colors.dart';
@@ -41,20 +44,20 @@ class CustomTextField extends StatelessWidget {
             validator ??
             (value) {
               if (value == null || value.isEmpty) {
-                return 'هذا الحقل مطلوب';
+                return LocaleKeys.requiredField.tr();
               }
               return null;
             },
         onSaved: onSaved,
         obscureText: obscureText,
         onChanged: onChanged,
-        style: TextStyle(color: Colors.black),
+        style: AppTextStyles.font15BlackMedium,
 
         decoration: InputDecoration(
           errorText: errorText,
           errorMaxLines: 4,
           hintText: hintText,
-          hintStyle: TextStyle(color: AppColors.neutralGrey1),
+          hintStyle: AppTextStyles.font14LightGrayRegular,
 
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
           focusedBorder: OutlineInputBorder(
@@ -66,8 +69,6 @@ class CustomTextField extends StatelessWidget {
             borderSide: BorderSide(color: AppColors.primaryLight),
           ),
           suffixIcon: suffixIcon,
-          fillColor: Colors.white38,
-          filled: true,
           prefixIcon: prefixIcon != null
               ? IconButton(
                   onPressed: onIconPressed,

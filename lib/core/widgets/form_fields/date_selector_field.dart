@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:expense_tracker_ar/core/theme/theme_extensions.dart';
 import 'package:expense_tracker_ar/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class DateSelectorField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = context.locale.languageCode;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12.r),
@@ -40,7 +42,7 @@ class DateSelectorField extends StatelessWidget {
             ),
             SizedBox(width: 12.w),
             Text(
-              DateFormat('dd نوفمبر yyyy', 'ar').format(selectedDate),
+              DateFormat('dd نوفمبر yyyy', locale).format(selectedDate),
               style: AppTextStyles.font15BlackMedium.copyWith(
                 color: Theme.of(context).colorScheme.onSurface,
               ),

@@ -1,10 +1,12 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/helper/functions/toast_helper.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/locale_keys.dart';
 import 'settings_tile.dart';
 
 class BackupRestoreSection extends StatelessWidget {
@@ -26,10 +28,13 @@ class BackupRestoreSection extends StatelessWidget {
             SettingsTile(
               icon: Icons.cloud_upload_outlined,
               iconColor: AppColors.systemGreen,
-              title: 'النسخ الاحتياطي',
-              subtitle: 'حفظ بياناتك على السحابة.',
+              title: LocaleKeys.backup.tr(),
+              subtitle: LocaleKeys.backupDescription.tr(),
               onTap: () {
-                ToastHelper.showInfo(context, message: 'قريباً');
+                ToastHelper.showInfo(
+                  context,
+                  message: LocaleKeys.comingSoon.tr(),
+                );
               },
             ),
             Padding(
@@ -47,10 +52,13 @@ class BackupRestoreSection extends StatelessWidget {
             SettingsTile(
               icon: Icons.cloud_download_outlined,
               iconColor: AppColors.systemBlue,
-              title: 'استعادة البيانات',
-              subtitle: 'استرجاع بياناتك من السحابة.',
+              title: LocaleKeys.restore.tr(),
+              subtitle: LocaleKeys.restoreDescription.tr(),
               onTap: () {
-                ToastHelper.showInfo(context, message: 'قريباً');
+                ToastHelper.showInfo(
+                  context,
+                  message: LocaleKeys.comingSoon.tr(),
+                );
               },
             ),
           ],

@@ -2,10 +2,12 @@ import 'dart:io';
 import 'package:expense_tracker_ar/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../utils/app_colors.dart';
 import '../../helper/functions/image_picker_dialog.dart';
 import '../../utils/app_text_styles.dart';
+import '../../utils/locale_keys.dart';
 
 /// Widget for displaying and managing multiple image attachments
 class ImageAttachmentSection extends StatelessWidget {
@@ -23,7 +25,7 @@ class ImageAttachmentSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 60.h,
+      height: 70.h,
       child: ListView(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
@@ -46,7 +48,6 @@ class ImageAttachmentSection extends StatelessWidget {
         margin: EdgeInsets.only(left: 8.w),
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
-          // color: Colors.grey[100],
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
             color: context.themeColor(
@@ -67,7 +68,7 @@ class ImageAttachmentSection extends StatelessWidget {
             ),
             SizedBox(height: 4.h),
             Text(
-              'إضافة',
+              LocaleKeys.add.tr(),
               style: AppTextStyles.font14LightGrayRegular.copyWith(
                 fontSize: 12.sp,
                 color: Theme.of(context).colorScheme.onSurface,
@@ -114,8 +115,8 @@ class ImageAttachmentSection extends StatelessWidget {
           ),
           // Remove button
           Positioned(
-            top: -5.h,
-            right: -10.w,
+            top: 0.h,
+            right: -5.w,
             child: GestureDetector(
               onTap: () => onImageRemoved(index),
               child: Container(

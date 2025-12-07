@@ -1,24 +1,26 @@
-import 'package:expense_tracker_ar/core/helper/database/cache_helper.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:expense_tracker_ar/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import '../../../../core/helper/constants/app_constants.dart';
-import '../../../../core/helper/database/cache_helper_keks.dart';
 import '../../../../core/models/transaction_model.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_text_styles.dart';
+import '../../../../core/utils/locale_keys.dart';
 
 class TransactionListItem extends StatelessWidget {
   final TransactionModel transaction;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
+  final String? currency;
 
   const TransactionListItem({
     super.key,
     required this.transaction,
     this.onEdit,
     this.onDelete,
+    this.currency,
   });
 
   @override
@@ -27,9 +29,9 @@ class TransactionListItem extends StatelessWidget {
       'income',
     );
     final amountColor = isIncome ? Colors.green : Colors.red;
-    final currency = CacheHelper().getData(key: CacheHelperKeys.currency);
+    final currencyCode = currency ?? 'USD';
     final currencySymbol = AppConstants.currencies.firstWhere(
-      (c) => c['code'] == currency,
+      (c) => c['code'] == currencyCode,
       orElse: () => {'symbol': ''},
     );
 
@@ -37,7 +39,7 @@ class TransactionListItem extends StatelessWidget {
       key: ObjectKey(transaction.id),
       trailingActions: [
         SwipeAction(
-          title: "حذف",
+          title: LocaleKeys.delete.tr(),
           style: AppTextStyles.font16WhiteSemiBold.copyWith(fontSize: 14.sp),
           onTap: (CompletionHandler handler) async {
             await handler(false);
@@ -47,7 +49,7 @@ class TransactionListItem extends StatelessWidget {
           icon: Icon(Icons.delete, color: Colors.white, size: 24.sp),
         ),
         SwipeAction(
-          title: "تعديل",
+          title: LocaleKeys.edit.tr(),
           style: AppTextStyles.font16WhiteSemiBold.copyWith(fontSize: 14.sp),
 
           onTap: (CompletionHandler handler) async {
@@ -75,9 +77,9 @@ class TransactionListItem extends StatelessWidget {
                   width: 48.w,
                   height: 48.h,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).brightness == Brightness.dark
+                    color: context.isDarkMode
                         ? const Color(0xFF253342)
-                        : Colors.grey[100],
+                        : Colors.grey[200],
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Icon(
