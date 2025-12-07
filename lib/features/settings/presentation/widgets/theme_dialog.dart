@@ -53,10 +53,8 @@ class _ThemeDialogState extends State<ThemeDialog> {
       backgroundColor: context.backgroundColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
       child: Container(
-        padding: EdgeInsets.all(15.w),
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.45,
-        ),
+        padding: EdgeInsets.all(12.w),
+
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -96,19 +94,24 @@ class _ThemeDialogState extends State<ThemeDialog> {
                   title: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text(
-                        theme['name']!,
-                        style: AppTextStyles.font16BlackMedium.copyWith(
-                          fontSize: 14.sp,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          theme['name']!,
+                          style: AppTextStyles.font16BlackMedium.copyWith(
+                            fontSize: 14.sp,
+                          ),
                         ),
                       ),
                       SizedBox(width: 10.w),
-                      Icon(
-                        theme['icon'],
-                        color: _selectedTheme == theme['code']
-                            ? AppColors.primaryBrand
-                            : Colors.grey,
-                        size: 22.sp,
+                      Flexible(
+                        child: Icon(
+                          theme['icon'],
+                          color: _selectedTheme == theme['code']
+                              ? AppColors.primaryBrand
+                              : Colors.grey,
+                          size: 22.sp,
+                        ),
                       ),
                     ],
                   ),

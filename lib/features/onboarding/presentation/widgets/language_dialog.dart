@@ -40,10 +40,8 @@ class _LanguageDialogState extends State<LanguageDialog> {
       backgroundColor: context.backgroundColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
       child: Container(
-        padding: EdgeInsets.all(15.w),
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.38,
-        ),
+        padding: EdgeInsets.all(12.w),
+        constraints: BoxConstraints(),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -56,9 +54,12 @@ class _LanguageDialogState extends State<LanguageDialog> {
                   onPressed: () => Navigator.pop(context),
                   color: Colors.grey,
                 ),
-                Text(
-                  LocaleKeys.chooseLanguage.tr(),
-                  style: AppTextStyles.font18BlackBold,
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    LocaleKeys.chooseLanguage.tr(),
+                    style: AppTextStyles.font18BlackBold,
+                  ),
                 ),
                 SizedBox(width: 40.w), // Balance the close icon
               ],
@@ -83,17 +84,23 @@ class _LanguageDialogState extends State<LanguageDialog> {
                   title: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text(
-                        language['name']!,
-                        style: AppTextStyles.font16BlackMedium.copyWith(
-                          fontWeight: FontWeightHelper.semiBold,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          language['name']!,
+                          style: AppTextStyles.font16BlackMedium.copyWith(
+                            fontWeight: FontWeightHelper.semiBold,
+                          ),
                         ),
                       ),
                       SizedBox(width: 10.w),
-                      Text(
-                        language['flag']!,
-                        style: AppTextStyles.font16BlackMedium.copyWith(
-                          fontWeight: FontWeightHelper.semiBold,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          language['flag']!,
+                          style: AppTextStyles.font16BlackMedium.copyWith(
+                            fontWeight: FontWeightHelper.semiBold,
+                          ),
                         ),
                       ),
                     ],

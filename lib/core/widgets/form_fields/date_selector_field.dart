@@ -3,7 +3,6 @@ import 'package:expense_tracker_ar/core/theme/theme_extensions.dart';
 import 'package:expense_tracker_ar/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 import '../../utils/app_text_styles.dart';
 
 /// Date selector field widget
@@ -42,7 +41,7 @@ class DateSelectorField extends StatelessWidget {
             ),
             SizedBox(width: 12.w),
             Text(
-              DateFormat('dd نوفمبر yyyy', locale).format(selectedDate),
+              DateFormat('d MMMM، yyyy', locale).format(selectedDate),
               style: AppTextStyles.font15BlackMedium.copyWith(
                 color: Theme.of(context).colorScheme.onSurface,
               ),
