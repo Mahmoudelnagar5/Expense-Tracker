@@ -12,6 +12,9 @@ class RecordCubit extends Cubit<RecordState> {
       super(RecordState(selectedDate: DateTime.now()));
 
   Future<void> loadTransactions() async {
+    // Prevent duplicate loading
+    if (state.status == RecordStatus.loading) return;
+    
     emit(state.copyWith(status: RecordStatus.loading));
 
     try {
@@ -19,17 +22,20 @@ class RecordCubit extends Cubit<RecordState> {
       final startDate = dateRange['startDate']!;
       final endDate = dateRange['endDate']!;
 
-      final transactions = await _dbHelper.getTransactionsByDateRange(
-        startDate,
-        endDate,
-      );
+      // Run database queries in parallel for better performance
+      final results = await Future.wait([
+        _dbHelper.getTransactionsByDateRange(startDate, endDate),
+        _dbHelper.getTotalIncome(startDate, endDate),
+        _dbHelper.getTotalExpenses(startDate, endDate),
+      ]);
 
-      final income = await _dbHelper.getTotalIncome(startDate, endDate);
-      final expense = await _dbHelper.getTotalExpenses(startDate, endDate);
+      final transactions = results[0] as List<dynamic>;
+      final income = results[1] as double;
+      final expense = results[2] as double;
 
       emit(
         state.copyWith(
-          transactions: transactions,
+          transactions: transactions.cast(),
           totalIncome: income,
           totalExpense: expense,
           status: RecordStatus.success,

@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/helper/constants/app_constants.dart';
 import '../../../../core/helper/functions/toast_helper.dart';
+import '../../../../core/services/local_notification_service.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_text_styles.dart';
 import '../../../../core/utils/locale_keys.dart';
@@ -86,6 +87,7 @@ class SettingsScreen extends StatelessWidget {
     BuildContext context,
     SettingsCubit cubit,
     TimeOfDay currentTime,
+    bool reminderEnabled,
   ) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
@@ -93,12 +95,21 @@ class SettingsScreen extends StatelessWidget {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: AppColors.primaryBrand,
-              onPrimary: Colors.white,
-              surface: Colors.white,
-              onSurface: Colors.black,
-            ),
+            colorScheme: context.isDarkMode
+                ? ColorScheme.dark(
+                    primary: AppColors.primaryBrand,
+                    onPrimary: Colors.white,
+                    surface: context.backgroundColor,
+                    onSurface: Colors.white,
+                    secondary: AppColors.primaryBrand,
+                  )
+                : ColorScheme.light(
+                    primary: AppColors.primaryBrand,
+                    onPrimary: Colors.white,
+                    surface: context.backgroundColor,
+                    onSurface: Colors.black,
+                    secondary: AppColors.primaryBrand,
+                  ),
           ),
           child: child!,
         );
@@ -106,6 +117,51 @@ class SettingsScreen extends StatelessWidget {
     );
     if (picked != null && picked != currentTime) {
       await cubit.setReminderTime(picked);
+      // Reschedule notification with new time if reminder is enabled
+      if (reminderEnabled) {
+        await _scheduleNotification(picked, context!);
+      }
+    }
+  }
+
+  Future<void> _scheduleNotification(
+    TimeOfDay time,
+    BuildContext context,
+  ) async {
+    await LocalNotificationService.scheduleDailyNotification(
+      hour: time.hour,
+      minute: time.minute,
+      title: LocaleKeys.reminderNotification.tr(),
+      body: LocaleKeys.dontForgetTrackExpenses.tr(),
+    );
+  }
+
+  Future<void> _handleReminderToggle(
+    BuildContext context,
+    SettingsCubit cubit,
+    bool value,
+    TimeOfDay reminderTime,
+  ) async {
+    await cubit.toggleReminder(value);
+
+    if (value) {
+      // Schedule notification
+      await _scheduleNotification(reminderTime, context);
+      if (context.mounted) {
+        ToastHelper.showSuccess(
+          context,
+          message: LocaleKeys.enableReminder.tr(),
+        );
+      }
+    } else {
+      // Cancel notification
+      await LocalNotificationService.cancelDailyNotification();
+      if (context.mounted) {
+        ToastHelper.showInfo(
+          context,
+          message: LocaleKeys.reminderDisabled.tr(),
+        );
+      }
     }
   }
 
@@ -292,11 +348,20 @@ class SettingsScreen extends StatelessWidget {
                             inactiveThumbColor: Colors.grey[700],
                             inactiveTrackColor: Colors.grey[300],
                             value: state.reminderEnabled,
-                            onChanged: (value) => cubit.toggleReminder(value),
+                            onChanged: (value) => _handleReminderToggle(
+                              context,
+                              cubit,
+                              value,
+                              state.reminderTime,
+                            ),
                             activeThumbColor: AppColors.primaryBrand,
                           ),
-                          onTap: () =>
-                              cubit.toggleReminder(!state.reminderEnabled),
+                          onTap: () => _handleReminderToggle(
+                            context,
+                            cubit,
+                            !state.reminderEnabled,
+                            state.reminderTime,
+                          ),
                         ),
                         _buildDivider(context),
 
@@ -310,6 +375,7 @@ class SettingsScreen extends StatelessWidget {
                             context,
                             cubit,
                             state.reminderTime,
+                            state.reminderEnabled,
                           ),
                         ),
                       ],

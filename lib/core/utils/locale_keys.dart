@@ -98,6 +98,8 @@ class LocaleKeys {
   static const String savedSuccessfully = 'saved_successfully';
   static const String updatedSuccessfully = 'updated_successfully';
   static const String errorOccurred = 'error_occurred';
+  static const String reminderDisabled = 'reminder_disabled';
+  static const String dontForgetTrackExpenses = 'dont_forget_track_expenses';
   static const String selectDateLabel = 'select_date_label';
   static const String paymentTypeLabel = 'payment_type_label';
   static const String amountLabel = 'amount_label';
@@ -121,4 +123,16 @@ class LocaleKeys {
   static const String selectImageSource = 'select_image_source';
   static const String camera = 'camera';
   static const String gallery = 'gallery';
+  static const String categoryBreakdown = 'category_breakdown';
+  static const String expensePie = 'expense_pie';
+  static const String incomeVsExpense = 'income_vs_expense';
+  static const String trendLine = 'trend_line';
+  static const String expenseCategories = 'expense_categories';
+  static const String incomeCategories = 'income_categories';
+  static const String expenseDistribution = 'expense_distribution';
+  static const String monthlyIncomeVsExpense = 'monthly_income_vs_expense';
+  static const String trendAnalysis = 'trend_analysis';
+  static const String noRecordsYet = 'no_records_yet';
+  static const String startTrackingMessage = 'start_tracking_message';
+  static const String addFirstTransaction = 'add_first_transaction';
 }

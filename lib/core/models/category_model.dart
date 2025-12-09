@@ -38,11 +38,6 @@ class IncomeCategories {
       type: CategoryType.income,
     ),
     CategoryModel(
-      name: 'Other',
-      icon: Icons.savings_outlined,
-      type: CategoryType.income,
-    ),
-    CategoryModel(
       name: 'Pocket Money',
       icon: Icons.wallet,
       type: CategoryType.income,
@@ -50,6 +45,11 @@ class IncomeCategories {
     CategoryModel(
       name: 'Lottery',
       icon: Icons.casino_outlined,
+      type: CategoryType.income,
+    ),
+    CategoryModel(
+      name: 'Other',
+      icon: Icons.category_outlined,
       type: CategoryType.income,
     ),
   ];
@@ -192,6 +192,11 @@ class ExpenseCategories {
     CategoryModel(
       name: 'Kids',
       icon: Icons.child_care,
+      type: CategoryType.expense,
+    ),
+    CategoryModel(
+      name: 'Other',
+      icon: Icons.category_outlined,
       type: CategoryType.expense,
     ),
   ];

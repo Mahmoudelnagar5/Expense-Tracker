@@ -73,6 +73,7 @@ class _LanguageDialogState extends State<LanguageDialog> {
                 duration: Duration(milliseconds: 400 + (entry.key * 100)),
                 child: RadioListTile<String>(
                   value: language['code']!,
+
                   groupValue: _selectedLanguage,
                   onChanged: (value) {
                     setState(() {
@@ -117,7 +118,9 @@ class _LanguageDialogState extends State<LanguageDialog> {
               child: SaveButton(
                 onPressed: () {
                   if (_selectedLanguage != null) {
-                    widget.onSave(_selectedLanguage!);
+                    Future.delayed(const Duration(milliseconds: 160), () {
+                      widget.onSave(_selectedLanguage!);
+                    });
                     Navigator.pop(context);
                   }
                 },

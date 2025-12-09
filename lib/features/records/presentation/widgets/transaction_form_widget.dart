@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/models/category_model.dart';
 import '../../../../core/models/transaction_model.dart';
+import '../../../../core/theme/theme_extensions.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_text_styles.dart';
 import '../../../../core/utils/locale_keys.dart';
@@ -98,12 +99,19 @@ class _TransactionFormWidgetState extends State<TransactionFormWidget>
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: AppColors.primaryBrand,
-              onPrimary: Colors.white,
-              surface: Colors.white,
-              onSurface: Colors.black,
-            ),
+            colorScheme: context.isDarkMode
+                ? ColorScheme.dark(
+                    primary: AppColors.primaryBrand,
+                    onPrimary: Colors.white,
+                    surface: context.backgroundColor,
+                    onSurface: Colors.white,
+                  )
+                : ColorScheme.light(
+                    primary: AppColors.primaryBrand,
+                    onPrimary: Colors.white,
+                    surface: context.backgroundColor,
+                    onSurface: Colors.black,
+                  ),
           ),
           child: child!,
         );

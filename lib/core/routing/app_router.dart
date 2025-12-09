@@ -12,9 +12,10 @@ abstract class AppRouter {
   static const String homeScreen = '/home';
   static const String settingsScreen = '/settings';
 
-  static final router = GoRouter(
-    initialLocation: onBoardingScreen,
-    routes: [
+  static GoRouter getRouter(bool isSetupComplete) {
+    return GoRouter(
+      initialLocation: isSetupComplete ? homeScreen : onBoardingScreen,
+      routes: [
       GoRoute(
         path: onBoardingScreen,
         pageBuilder: (context, state) => CustomTransitionPage(
@@ -49,7 +50,8 @@ abstract class AppRouter {
         ),
       ),
     ],
-  );
+    );
+  }
 }
 
 Widget _transitionsBuilder(context, animation, secondaryAnimation, child) {

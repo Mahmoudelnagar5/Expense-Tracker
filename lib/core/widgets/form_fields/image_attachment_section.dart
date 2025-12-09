@@ -25,7 +25,7 @@ class ImageAttachmentSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 70.h,
+      height: 65.h,
       child: ListView(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
@@ -67,11 +67,14 @@ class ImageAttachmentSection extends StatelessWidget {
               size: 28.sp,
             ),
             SizedBox(height: 4.h),
-            Text(
-              LocaleKeys.add.tr(),
-              style: AppTextStyles.font14LightGrayRegular.copyWith(
-                fontSize: 12.sp,
-                color: Theme.of(context).colorScheme.onSurface,
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                LocaleKeys.add.tr(),
+                style: AppTextStyles.font14LightGrayRegular.copyWith(
+                  fontSize: 12.sp,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
               ),
             ),
           ],

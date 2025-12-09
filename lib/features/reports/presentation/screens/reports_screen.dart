@@ -19,13 +19,9 @@ class ReportsScreen extends StatefulWidget {
 }
 
 class ReportsScreenState extends State<ReportsScreen>
-    with
-        SingleTickerProviderStateMixin,
-        WidgetsBindingObserver,
-        AutomaticKeepAliveClientMixin {
+    with WidgetsBindingObserver, AutomaticKeepAliveClientMixin {
   final SQLiteHelper _dbHelper = SQLiteHelper();
-  late TabController _tabController;
-  int _currentTabIndex = 0;
+  String _selectedChart = 'category_breakdown';
 
   Map<String, double> expenseCategoryData = {};
   Map<String, double> incomeCategoryData = {};
@@ -45,18 +41,19 @@ class ReportsScreenState extends State<ReportsScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _tabController = TabController(length: 4, vsync: this);
-    _tabController.addListener(() {
-      if (_tabController.indexIsChanging) {
-        setState(() {
-          _currentTabIndex = _tabController.index;
-        });
-      }
-    });
     _loadData();
 
     // Listen to refresh notifier
     widget.refreshNotifier?.addListener(_handleRefresh);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Reload data when locale changes
+    if (_hasBuiltCharts) {
+      _loadData();
+    }
   }
 
   void _handleRefresh() {
@@ -78,7 +75,6 @@ class ReportsScreenState extends State<ReportsScreen>
   void dispose() {
     widget.refreshNotifier?.removeListener(_handleRefresh);
     WidgetsBinding.instance.removeObserver(this);
-    _tabController.dispose();
     super.dispose();
   }
 
@@ -120,7 +116,7 @@ class ReportsScreenState extends State<ReportsScreen>
     List<ChartData> incomeChart = [];
     List<ChartData> expenseChart = [];
 
-    for (int i = 11; i >= 0; i--) {
+    for (int i = 5; i >= 0; i--) {
       final monthDate = DateTime(now.year, now.month - i, 1);
       final monthStart = DateTime(monthDate.year, monthDate.month, 1);
       final monthEnd = DateTime(
@@ -138,7 +134,10 @@ class ReportsScreenState extends State<ReportsScreen>
       incomes.add(income);
       expenses.add(expense);
 
-      final monthLabel = DateFormat('MMM').format(monthDate);
+      final monthLabel = DateFormat(
+        'MMM',
+        context.locale.languageCode,
+      ).format(monthDate);
       labels.add(monthLabel);
 
       incomeChart.add(ChartData(monthLabel, income));
@@ -199,147 +198,263 @@ class ReportsScreenState extends State<ReportsScreen>
 
     return Column(
       children: [
-        TabBar(
-          indicatorPadding: EdgeInsets.zero,
-          padding: EdgeInsets.zero,
-          labelPadding: EdgeInsets.symmetric(horizontal: 12.w),
-          indicatorSize: TabBarIndicatorSize.label,
-          controller: _tabController,
-          isScrollable: true,
-          tabAlignment: TabAlignment.start,
-          labelColor: Theme.of(context).colorScheme.primary,
-          unselectedLabelColor: Colors.grey,
-          indicatorColor: Theme.of(context).colorScheme.primary,
-          labelStyle: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
-          tabs: const [
-            Tab(text: 'Category Breakdown'),
-            Tab(text: 'Expense Pie'),
-            Tab(text: 'Income vs Expense'),
-            Tab(text: 'Trend Line'),
-          ],
-        ),
-        Expanded(
-          child: IndexedStack(
-            index: _currentTabIndex,
-            children: [
-              // Tab 0: Category Pie Chart
-              _buildChartSection(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  padding: EdgeInsets.zero,
-                  child: Column(
-                    children: [
-                      SizedBox(height: 16.h),
-                      if (expenseCategoryData.isNotEmpty) ...[
-                        SizedBox(
-                          height: 300.h,
-                          child: CategoryDonutChart(
-                            categoryData: expenseCategoryData,
-                            title: 'Expense Categories',
-                          ),
-                        ),
-                        SizedBox(height: 24.h),
-                      ],
-                      if (incomeCategoryData.isNotEmpty) ...[
-                        SizedBox(
-                          height: 300.h,
-                          child: CategoryDonutChart(
-                            categoryData: incomeCategoryData,
-                            title: 'Income Categories',
-                          ),
-                        ),
-                        SizedBox(height: 20.h),
-                      ],
-                    ],
-                  ),
-                ),
-              ),
-
-              // Tab 1: Expense Pie Chart (fl_chart)
-              _buildChartSection(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.zero,
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(
-                    children: [
-                      SizedBox(height: 16.h),
-                      Text(
-                        'Expense Distribution',
-                        style: TextStyle(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
-                      ),
-                      SizedBox(height: 16.h),
-                      ExpensePieChart(categoryData: expenseCategoryData),
-                      SizedBox(height: 16.h),
-                      if (expenseCategoryData.isNotEmpty)
-                        ChartLegendWidget(categoryData: expenseCategoryData),
-                      SizedBox(height: 16.h),
-                    ],
-                  ),
-                ),
-              ),
-              // Tab 2: Income vs Expense Bar Chart (fl_chart)
-              _buildChartSection(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  padding: EdgeInsets.zero,
-                  child: Column(
-                    children: [
-                      SizedBox(height: 20.h),
-                      Text(
-                        'Monthly Income vs Expense',
-                        style: TextStyle(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
-                      ),
-                      SizedBox(height: 25.h),
-                      IncomeExpenseBarChart(
-                        incomeData: monthlyIncome,
-                        expenseData: monthlyExpense,
-                        labels: monthLabels,
-                      ),
-                      SizedBox(height: 16.h),
-                      _buildLegendRow(),
-                    ],
-                  ),
-                ),
-              ),
-
-              // Tab 3: Trend Line Chart (Syncfusion)
-              _buildChartSection(
-                child: Column(
+        // Dropdown Chart Selector
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(
+              color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+            ),
+          ),
+          child: DropdownButton<String>(
+            value: _selectedChart,
+            isExpanded: true,
+            underline: const SizedBox(),
+            icon: Icon(Icons.keyboard_arrow_down, size: 24.sp),
+            style: TextStyle(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+            items: [
+              DropdownMenuItem(
+                value: 'category_breakdown',
+                child: Row(
                   children: [
-                    SizedBox(height: 20.h),
-                    Text(
-                      'Trend Analysis',
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
+                    Icon(
+                      Icons.donut_small,
+                      size: 18.sp,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
-                    SizedBox(height: 25.h),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        physics: const BouncingScrollPhysics(),
-                        child: TrendLineChart(
-                          incomeData: incomeChartData,
-                          expenseData: expenseChartData,
-                        ),
-                      ),
+                    SizedBox(width: 8.w),
+                    Text(LocaleKeys.categoryBreakdown.tr()),
+                  ],
+                ),
+              ),
+              DropdownMenuItem(
+                value: 'expense_pie',
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.pie_chart,
+                      size: 18.sp,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
+                    SizedBox(width: 8.w),
+                    Text(LocaleKeys.expensePie.tr()),
+                  ],
+                ),
+              ),
+              DropdownMenuItem(
+                value: 'income_vs_expense',
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.bar_chart,
+                      size: 18.sp,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    SizedBox(width: 8.w),
+                    Text(LocaleKeys.incomeVsExpense.tr()),
+                  ],
+                ),
+              ),
+              DropdownMenuItem(
+                value: 'trend_line',
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.show_chart,
+                      size: 18.sp,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    SizedBox(width: 8.w),
+                    Text(LocaleKeys.trendLine.tr()),
                   ],
                 ),
               ),
             ],
+            onChanged: (value) {
+              if (value != null) {
+                setState(() {
+                  _selectedChart = value;
+                });
+              }
+            },
+          ),
+        ),
+        // Chart Display
+        Expanded(
+          child: IndexedStack(
+            index: _getChartIndex(),
+            children: [
+              _buildCategoryBreakdownChart(),
+              _buildExpensePieChart(),
+              _buildIncomeVsExpenseChart(),
+              _buildTrendLineChart(),
+            ],
           ),
         ),
       ],
+    );
+  }
+
+  int _getChartIndex() {
+    switch (_selectedChart) {
+      case 'category_breakdown':
+        return 0;
+      case 'expense_pie':
+        return 1;
+      case 'income_vs_expense':
+        return 2;
+      case 'trend_line':
+        return 3;
+      default:
+        return 0;
+    }
+  }
+
+  Widget _buildCategoryBreakdownChart() {
+    return _buildChartSection(
+      child: SingleChildScrollView(
+        key: const ValueKey('category_breakdown_scroll'),
+        physics: const BouncingScrollPhysics(),
+        padding: EdgeInsets.zero,
+        child: Column(
+          children: [
+            SizedBox(height: 16.h),
+            if (expenseCategoryData.isNotEmpty) ...[
+              SizedBox(
+                height: 300.h,
+                child: CategoryDonutChart(
+                  categoryData: expenseCategoryData,
+                  title: LocaleKeys.expenseCategories.tr(),
+                  key: const ValueKey('expense_cat'),
+                ),
+              ),
+              SizedBox(height: 24.h),
+            ],
+            if (incomeCategoryData.isNotEmpty) ...[
+              SizedBox(
+                height: 300.h,
+                child: CategoryDonutChart(
+                  categoryData: incomeCategoryData,
+                  title: LocaleKeys.incomeCategories.tr(),
+                  key: const ValueKey('income_cat'),
+                ),
+              ),
+              SizedBox(height: 20.h),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildExpensePieChart() {
+    return _buildChartSection(
+      child: SingleChildScrollView(
+        key: const ValueKey('expense_pie_scroll'),
+        padding: EdgeInsets.zero,
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            SizedBox(height: 16.h),
+            Text(
+              LocaleKeys.expenseDistribution.tr(),
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
+            SizedBox(height: 16.h),
+            ExpensePieChart(
+              key: const ValueKey('expense_pie'),
+              categoryData: expenseCategoryData,
+            ),
+            SizedBox(height: 16.h),
+            if (expenseCategoryData.isNotEmpty)
+              ChartLegendWidget(categoryData: expenseCategoryData),
+            SizedBox(height: 16.h),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildIncomeVsExpenseChart() {
+    return _buildChartSection(
+      child: SingleChildScrollView(
+        key: const ValueKey('income_expense_scroll'),
+        physics: const BouncingScrollPhysics(),
+        padding: EdgeInsets.zero,
+        child: Column(
+          children: [
+            SizedBox(height: 20.h),
+            Text(
+              LocaleKeys.monthlyIncomeVsExpense.tr(),
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
+            SizedBox(height: 25.h),
+            IncomeExpenseBarChart(
+              key: const ValueKey('income_expense'),
+              incomeData: monthlyIncome,
+              expenseData: monthlyExpense,
+              labels: monthLabels,
+            ),
+            SizedBox(height: 16.h),
+            _buildLegendRow(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTrendLineChart() {
+    return _buildChartSection(
+      child: Column(
+        key: const ValueKey('trend_line_column'),
+        children: [
+          SizedBox(height: 20.h),
+          Text(
+            LocaleKeys.trendAnalysis.tr(),
+            style: TextStyle(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+          ),
+          SizedBox(height: 25.h),
+          Expanded(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: SizedBox(
+                    height: constraints.maxHeight > 0
+                        ? constraints.maxHeight
+                        : 400.h,
+                    child: TrendLineChart(
+                        key: const ValueKey('trend_line'),
+                      incomeData: incomeChartData,
+                      expenseData: expenseChartData,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          SizedBox(height: 20.h),
+        ],
+      ),
     );
   }
 
@@ -351,9 +466,9 @@ class ReportsScreenState extends State<ReportsScreen>
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildLegendItem('Income', Colors.green),
+        _buildLegendItem(LocaleKeys.income.tr(), Colors.green),
         SizedBox(width: 24.w),
-        _buildLegendItem('Expense', Colors.red),
+        _buildLegendItem(LocaleKeys.expense.tr(), Colors.red),
       ],
     );
   }

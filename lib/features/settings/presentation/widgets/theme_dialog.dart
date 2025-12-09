@@ -126,7 +126,9 @@ class _ThemeDialogState extends State<ThemeDialog> {
             SaveButton(
               onPressed: () {
                 if (_selectedTheme != null) {
-                  widget.onSave(_selectedTheme!);
+                  Future.delayed(const Duration(milliseconds: 150), () {
+                    widget.onSave(_selectedTheme!);
+                  });
                   Navigator.pop(context);
                 }
               },

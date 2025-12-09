@@ -22,26 +22,23 @@ class NotesInputField extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(16.r),
       ),
-      child: Expanded(
-        child: TextField(
-          controller: controller,
-          maxLines: 1,
-          cursorColor: AppColors.primaryBrand,
-          decoration: InputDecoration(
-            prefixIcon: Icon(
-              Icons.notes,
-              color: AppColors.primaryBrand,
-              size: 20.sp,
-            ),
-            border: InputBorder.none,
-
-            hintText: LocaleKeys.addNote.tr(),
-            hintStyle: AppTextStyles.font14LightGrayRegular,
+      child: TextField(
+        controller: controller,
+        maxLines: 1,
+        cursorColor: AppColors.primaryBrand,
+        decoration: InputDecoration(
+          prefixIcon: Icon(
+            Icons.notes,
+            color: AppColors.primaryBrand,
+            size: 20.sp,
           ),
-          style: AppTextStyles.font15BlackMedium.copyWith(
-            fontSize: 14.5.sp,
-            color: context.textColor,
-          ),
+          border: InputBorder.none,
+          hintText: LocaleKeys.addNote.tr(),
+          hintStyle: AppTextStyles.font14LightGrayRegular,
+        ),
+        style: AppTextStyles.font15BlackMedium.copyWith(
+          fontSize: 14.5.sp,
+          color: context.textColor,
         ),
       ),
     );

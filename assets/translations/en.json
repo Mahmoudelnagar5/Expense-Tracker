@@ -1,5 +1,5 @@
 {
-    "app_name": "Expense Tracker",
+    "app_name": "قرشين وبنعدهم",
     "welcome": "Welcome",
     "settings": "Settings",
     "profile": "Profile",
@@ -119,5 +119,19 @@
     "user": "User",
     "select_image_source": "Select Image Source",
     "camera": "Camera",
-    "gallery": "Gallery"
+    "gallery": "Gallery",
+    "reminder_disabled": "Reminder Disabled",
+    "dont_forget_track_expenses": "Don't forget to track your expenses today!",
+    "category_breakdown": "Category Breakdown",
+    "expense_pie": "Expense Pie",
+    "income_vs_expense": "Income vs Expense",
+    "trend_line": "Trend Line",
+    "expense_categories": "Expense Categories",
+    "income_categories": "Income Categories",
+    "expense_distribution": "Expense Distribution",
+    "monthly_income_vs_expense": "Monthly Income vs Expense",
+    "trend_analysis": "Trend Analysis",
+    "no_records_yet": "No Records Yet",
+    "start_tracking_message": "Start tracking your expenses and income to see them here",
+    "add_first_transaction": "Add Your First Transaction"
 }

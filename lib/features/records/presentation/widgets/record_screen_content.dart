@@ -55,28 +55,32 @@ class RecordScreenContent extends StatelessWidget {
         return Column(
           children: [
             // Date Selector
-            DateSelectorWidget(
-              dateText: _getFormattedDate(
-                context,
-                state.selectedDate,
-                state.filterType,
+            RepaintBoundary(
+              child: DateSelectorWidget(
+                dateText: _getFormattedDate(
+                  context,
+                  state.selectedDate,
+                  state.filterType,
+                ),
+                onPreviousDate: cubit.goToPreviousDate,
+                onNextDate: cubit.goToNextDate,
+                onFilterPressed: () =>
+                    _handleFilterPressed(context, state, cubit),
+                onDatePressed: () => _handleDatePressed(context, state, cubit),
               ),
-              onPreviousDate: cubit.goToPreviousDate,
-              onNextDate: cubit.goToNextDate,
-              onFilterPressed: () =>
-                  _handleFilterPressed(context, state, cubit),
-              onDatePressed: () => _handleDatePressed(context, state, cubit),
             ),
 
             // Divider
             _buildDivider(context),
 
             // Summary Card
-            SummaryCardWidget(
-              incomeAmount: state.totalIncome.toStringAsFixed(0),
-              expenseAmount: state.totalExpense.toStringAsFixed(0),
-              totalAmount: state.totalBalance.toStringAsFixed(0),
-              currency: currency,
+            RepaintBoundary(
+              child: SummaryCardWidget(
+                incomeAmount: state.totalIncome.toStringAsFixed(0),
+                expenseAmount: state.totalExpense.toStringAsFixed(0),
+                totalAmount: state.totalBalance.toStringAsFixed(0),
+                currency: currency,
+              ),
             ),
 
             // Divider
@@ -87,8 +91,15 @@ class RecordScreenContent extends StatelessWidget {
               child: state.isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : state.transactions.isEmpty
-                  ? EmptyStateWidget(message: LocaleKeys.noData.tr())
-                  : _buildTransactionList(context, state, cubit, currency),
+                  ? const EmptyStateWidget()
+                  : RepaintBoundary(
+                      child: _buildTransactionList(
+                        context,
+                        state,
+                        cubit,
+                        currency,
+                      ),
+                    ),
             ),
           ],
         );
@@ -136,40 +147,42 @@ class RecordScreenContent extends StatelessWidget {
         final dateKey = groupedTransactions.keys.elementAt(index);
         final transactions = groupedTransactions[dateKey]!;
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Date Header
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? const Color(0xFF253342)
-                  : Colors.grey[100],
-              child: Text(
-                dateKey,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFFB8C5D6)
-                      : Colors.grey[700],
+        return RepaintBoundary(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Date Header
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFF253342)
+                    : Colors.grey[100],
+                child: Text(
+                  dateKey,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFFB8C5D6)
+                        : Colors.grey[700],
+                  ),
                 ),
               ),
-            ),
 
-            // Transactions for this date
-            ...transactions.map(
-              (transaction) => TransactionListItem(
-                transaction: transaction,
-                currency: currency,
-                onEdit: () =>
-                    _handleEditTransaction(context, transaction, cubit),
-                onDelete: () =>
-                    _handleDeleteTransaction(context, transaction, cubit),
+              // Transactions for this date
+              ...transactions.map(
+                (transaction) => TransactionListItem(
+                  transaction: transaction,
+                  currency: currency,
+                  onEdit: () =>
+                      _handleEditTransaction(context, transaction, cubit),
+                  onDelete: () =>
+                      _handleDeleteTransaction(context, transaction, cubit),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );
@@ -232,7 +245,13 @@ class RecordScreenContent extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: DateFilterType.values.map((type) {
             return RadioListTile<DateFilterType>(
-              title: Text(type.arabicName),
+              title: Text(
+                type.arabicName,
+                style: AppTextStyles.font15BlackMedium.copyWith(
+                  fontSize: 16.sp,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+              ),
               value: type,
               groupValue: state.filterType,
               activeColor: AppColors.primaryBrand,

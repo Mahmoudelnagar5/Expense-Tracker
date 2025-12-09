@@ -79,15 +79,22 @@ class IncomeExpenseBarChart extends StatelessWidget {
                 sideTitles: SideTitles(
                   showTitles: true,
                   getTitlesWidget: (value, meta) {
-                    return Text(
-                      value.toInt().toString(),
-                      style: TextStyle(
-                        fontSize: 10.sp,
-                        color: Theme.of(context).colorScheme.onSurface,
+                    return Padding(
+                      padding: EdgeInsets.only(right: 4.w),
+                      child: Text(
+                        _formatYAxisLabel(value),
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withOpacity(0.7),
+                        ),
                       ),
                     );
+                    // }
                   },
-                  reservedSize: 40.w,
+                  reservedSize: 45.w,
+                  interval: _getMaxY() / 4,
                 ),
               ),
               topTitles: const AxisTitles(
@@ -125,6 +132,13 @@ class IncomeExpenseBarChart extends StatelessWidget {
         : expenseData.reduce((a, b) => a > b ? a : b);
     final max = maxIncome > maxExpense ? maxIncome : maxExpense;
     return (max * 1.2).ceilToDouble();
+  }
+
+  String _formatYAxisLabel(double value) {
+    if (value >= 1000) {
+      return '${(value / 1000).toStringAsFixed(0)}K';
+    }
+    return value.toInt().toString();
   }
 
   List<BarChartGroupData> _buildBarGroups() {
