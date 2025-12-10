@@ -39,6 +39,10 @@ class SettingsCubit extends Cubit<SettingsState> {
       final reminderEnabled =
           _cacheHelper.getData(key: CacheHelperKeys.reminderEnabled) ?? false;
 
+      final appLockEnabled =
+          _cacheHelper.getData(key: CacheHelperKeys.appLockEnabled) ?? false;
+      final appLockPin = _cacheHelper.getData(key: CacheHelperKeys.appLockPin);
+
       final savedHour = _cacheHelper.getData(key: CacheHelperKeys.reminderHour);
       final savedMinute = _cacheHelper.getData(
         key: CacheHelperKeys.reminderMinute,
@@ -57,6 +61,8 @@ class SettingsCubit extends Cubit<SettingsState> {
           theme: theme,
           reminderEnabled: reminderEnabled,
           reminderTime: reminderTime,
+          appLockEnabled: appLockEnabled,
+          appLockPin: appLockPin is String ? appLockPin : null,
           isLoading: false,
         ),
       );
@@ -165,5 +171,39 @@ class SettingsCubit extends Cubit<SettingsState> {
   /// Clear error message
   void clearError() {
     emit(state.copyWith(errorMessage: null));
+  }
+
+  /// Toggle app lock enabled/disabled and optionally set a PIN
+  Future<void> setAppLock({required bool enabled, String? pin}) async {
+    try {
+      await _cacheHelper.saveData(
+        key: CacheHelperKeys.appLockEnabled,
+        value: enabled,
+      );
+      if (pin != null) {
+        await _cacheHelper.saveData(
+          key: CacheHelperKeys.appLockPin,
+          value: pin,
+        );
+      }
+      emit(
+        state.copyWith(
+          appLockEnabled: enabled,
+          appLockPin: pin ?? state.appLockPin,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(errorMessage: 'Failed to update app lock: $e'));
+    }
+  }
+
+  /// Update only the PIN without toggling enable flag
+  Future<void> updateAppLockPin(String pin) async {
+    try {
+      await _cacheHelper.saveData(key: CacheHelperKeys.appLockPin, value: pin);
+      emit(state.copyWith(appLockPin: pin));
+    } catch (e) {
+      emit(state.copyWith(errorMessage: 'Failed to update PIN: $e'));
+    }
   }
 }

@@ -132,7 +132,7 @@ class LocalNotificationService {
       'id 4',
       importance: Importance.max,
       priority: Priority.high,
-      largeIcon: DrawableResourceAndroidBitmap('ic_launcher'),
+      largeIcon: DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
     );
     NotificationDetails details = const NotificationDetails(android: android);
     tz.initializeTimeZones();
@@ -196,6 +196,7 @@ class LocalNotificationService {
       channelDescription: 'Daily reminder notification for expense tracking',
       importance: Importance.max,
       priority: Priority.high,
+      largeIcon: DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
     );
     const NotificationDetails details = NotificationDetails(android: android);
 

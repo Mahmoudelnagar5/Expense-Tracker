@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/helper/constants/app_constants.dart';
+import '../../../../core/helper/functions/pin_password.dart';
 import '../../../../core/helper/functions/toast_helper.dart';
 import '../../../../core/services/local_notification_service.dart';
 import '../../../../core/utils/app_colors.dart';
@@ -14,7 +15,8 @@ import '../../../../core/utils/locale_keys.dart';
 import '../../../../core/utils/localization_helper.dart';
 import '../../../onboarding/presentation/widgets/currency_dialog.dart';
 import '../../../onboarding/presentation/widgets/language_dialog.dart';
-import '../controller/controller.dart';
+import '../controller/settings_cubit.dart';
+import '../controller/settings_state.dart';
 import '../widgets/backup_restore_section.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/settings_section_header.dart';
@@ -119,7 +121,7 @@ class SettingsScreen extends StatelessWidget {
       await cubit.setReminderTime(picked);
       // Reschedule notification with new time if reminder is enabled
       if (reminderEnabled) {
-        await _scheduleNotification(picked, context!);
+        await _scheduleNotification(picked, context);
       }
     }
   }
@@ -304,19 +306,122 @@ class SettingsScreen extends StatelessWidget {
                         ),
                         _buildDivider(context),
 
-                        // Categories
+                        // App Lock
                         SettingsTile(
-                          icon: Icons.category_outlined,
-                          iconColor: AppColors.secondaryBrown,
-                          title: LocaleKeys.categorySettings.tr(),
-                          subtitle: LocaleKeys.editCategories.tr(),
-                          onTap: () {
-                            ToastHelper.showInfo(
+                          icon: Icons.lock_outline,
+                          iconColor: AppColors.primaryBrand,
+                          title: LocaleKeys.appLock.tr(),
+                          subtitle: state.appLockEnabled
+                              ? LocaleKeys.enableAppLock.tr()
+                              : LocaleKeys.disableAppLock.tr(),
+                          trailing: Switch(
+                            inactiveThumbColor: Colors.grey[700],
+                            inactiveTrackColor: Colors.grey[300],
+                            value: state.appLockEnabled,
+                            onChanged: (value) async {
+                              if (value) {
+                                final pin = await promptForPinCreation(
+                                  context,
+                                  title: LocaleKeys.setPin.tr(),
+                                  confirmTitle: LocaleKeys.confirmPin.tr(),
+                                );
+                                if (pin != null) {
+                                  await cubit.setAppLock(
+                                    enabled: true,
+                                    pin: pin,
+                                  );
+                                  if (context.mounted) {
+                                    ToastHelper.showSuccess(
+                                      context,
+                                      message: LocaleKeys.appLockEnabled.tr(),
+                                    );
+                                  }
+                                }
+                              } else {
+                                // Require current PIN to disable if set
+                                final currentPin = state.appLockPin;
+                                if (currentPin != null) {
+                                  final verified =
+                                      await promptForPinVerification(
+                                        context,
+                                        title: LocaleKeys.enterCurrentPin.tr(),
+                                        correctPin: currentPin,
+                                      );
+                                  if (!verified) return;
+                                }
+                                await cubit.setAppLock(enabled: false);
+                                if (context.mounted) {
+                                  ToastHelper.showInfo(
+                                    context,
+                                    message: LocaleKeys.appLockDisabled.tr(),
+                                  );
+                                }
+                              }
+                            },
+                            activeThumbColor: AppColors.primaryBrand,
+                          ),
+                          onTap: () async {
+                            // Change PIN flow
+                            if (!state.appLockEnabled) {
+                              final pin = await promptForPinCreation(
+                                context,
+                                title: LocaleKeys.setPin.tr(),
+                                confirmTitle: LocaleKeys.confirmPin.tr(),
+                              );
+                              if (pin != null) {
+                                await cubit.setAppLock(enabled: true, pin: pin);
+                                if (context.mounted) {
+                                  ToastHelper.showSuccess(
+                                    context,
+                                    message: LocaleKeys.appLockEnabled.tr(),
+                                  );
+                                }
+                              }
+                              return;
+                            }
+
+                            // If enabled, verify current PIN then change
+                            final currentPin = state.appLockPin;
+                            if (currentPin != null) {
+                              final verified = await promptForPinVerification(
+                                context,
+                                title: LocaleKeys.enterCurrentPin.tr(),
+                                correctPin: currentPin,
+                              );
+                              if (!verified) return;
+                            }
+
+                            final newPin = await promptForPinCreation(
                               context,
-                              message: LocaleKeys.comingSoon.tr(),
+                              title: LocaleKeys.setPin.tr(),
+                              confirmTitle: LocaleKeys.confirmPin.tr(),
                             );
+                            if (newPin != null) {
+                              await cubit.updateAppLockPin(newPin);
+                              if (context.mounted) {
+                                ToastHelper.showSuccess(
+                                  context,
+                                  message: LocaleKeys.pinUpdated.tr(),
+                                );
+                              }
+                            }
                           },
                         ),
+                        // _buildDivider(context),
+
+                        // // Categories
+                        // SettingsTile(
+                        //   icon: Icons.category_outlined,
+                        //   iconColor: AppColors.secondaryBrown,
+                        //   title: LocaleKeys.categorySettings.tr(),
+                        //   subtitle: LocaleKeys.editCategories.tr(),
+                        //   onTap: () {
+                        //     ToastHelper.showInfo(
+                        //       context,
+                        //       message: LocaleKeys.comingSoon.tr(),
+                        //     );
+                        //   },
+                        // ),
                       ],
                     ),
                   ),

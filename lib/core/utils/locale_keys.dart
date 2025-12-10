@@ -135,4 +135,19 @@ class LocaleKeys {
   static const String noRecordsYet = 'no_records_yet';
   static const String startTrackingMessage = 'start_tracking_message';
   static const String addFirstTransaction = 'add_first_transaction';
+  static const String appLock = 'app_lock';
+  static const String enableAppLock = 'enable_app_lock';
+  static const String disableAppLock = 'disable_app_lock';
+  static const String changePin = 'change_pin';
+  static const String setPin = 'set_pin';
+  static const String confirmPin = 'confirm_pin';
+  static const String pinMismatch = 'pin_mismatch';
+  static const String pinUpdated = 'pin_updated';
+  static const String appLockEnabled = 'app_lock_enabled';
+  static const String appLockDisabled = 'app_lock_disabled';
+  static const String enterCurrentPin = 'enter_current_pin';
+  static const String wrongPin = 'wrong_pin';
+  static const String transactionDetails = 'transaction_details';
+  static const String type = 'type';
+  static const String notes = 'notes';
 }

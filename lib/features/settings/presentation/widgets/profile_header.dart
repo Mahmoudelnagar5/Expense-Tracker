@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:expense_tracker_ar/features/settings/presentation/controller/controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,6 +12,8 @@ import '../../../../core/helper/functions/toast_helper.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../../../core/utils/app_text_styles.dart';
 import '../../../../core/utils/locale_keys.dart';
+import '../controller/settings_cubit.dart';
+import '../controller/settings_state.dart';
 import 'edit_username_dialog.dart';
 
 class ProfileHeader extends StatelessWidget {

@@ -443,7 +443,7 @@ class ReportsScreenState extends State<ReportsScreen>
                         ? constraints.maxHeight
                         : 400.h,
                     child: TrendLineChart(
-                        key: const ValueKey('trend_line'),
+                      key: const ValueKey('trend_line'),
                       incomeData: incomeChartData,
                       expenseData: expenseChartData,
                     ),

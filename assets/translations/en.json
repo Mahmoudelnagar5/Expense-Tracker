@@ -133,5 +133,20 @@
     "trend_analysis": "Trend Analysis",
     "no_records_yet": "No Records Yet",
     "start_tracking_message": "Start tracking your expenses and income to see them here",
-    "add_first_transaction": "Add Your First Transaction"
+    "add_first_transaction": "Add Your First Transaction",
+    "app_lock": "App Lock",
+    "enable_app_lock": "Enable App Lock",
+    "disable_app_lock": "Disable App Lock",
+    "change_pin": "Change PIN",
+    "set_pin": "Set PIN",
+    "confirm_pin": "Confirm PIN",
+    "pin_mismatch": "PINs do not match",
+    "pin_updated": "PIN updated",
+    "app_lock_enabled": "App lock enabled",
+    "app_lock_disabled": "App lock disabled",
+    "enter_current_pin": "Enter current PIN",
+    "wrong_pin": "Wrong PIN",
+    "transaction_details": "Transaction Details",
+    "type": "Type",
+    "notes": "Notes"
 }

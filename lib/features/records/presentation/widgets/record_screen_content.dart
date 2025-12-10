@@ -12,7 +12,7 @@ import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_text_styles.dart';
 import '../../../../core/utils/locale_keys.dart';
 import '../../../../core/utils/font_weight_helper.dart';
-import '../../../settings/presentation/controller/controller.dart';
+import '../../../settings/presentation/controller/settings_cubit.dart';
 import '../../controller/record_cubit.dart';
 import '../../controller/record_state.dart';
 import 'date_selector_widget.dart';

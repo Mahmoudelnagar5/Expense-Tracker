@@ -99,8 +99,8 @@ class ExpenseCategories {
       type: CategoryType.expense,
     ),
     CategoryModel(
-      name: 'Alcohol',
-      icon: Icons.local_bar_outlined,
+      name: 'Groceries',
+      icon: Icons.shopping_basket_outlined,
       type: CategoryType.expense,
     ),
     CategoryModel(

@@ -8,4 +8,6 @@ class CacheHelperKeys {
   static const String reminderEnabled = 'reminderEnabled';
   static const String reminderHour = 'reminderHour';
   static const String reminderMinute = 'reminderMinute';
+  static const String appLockEnabled = 'appLockEnabled';
+  static const String appLockPin = 'appLockPin';
 }

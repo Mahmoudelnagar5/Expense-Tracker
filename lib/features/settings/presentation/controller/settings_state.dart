@@ -9,6 +9,8 @@ class SettingsState {
   final String? theme;
   final bool reminderEnabled;
   final TimeOfDay reminderTime;
+  final bool appLockEnabled;
+  final String? appLockPin;
   final bool isLoading;
   final String? errorMessage;
 
@@ -20,6 +22,8 @@ class SettingsState {
     this.theme,
     this.reminderEnabled = false,
     this.reminderTime = const TimeOfDay(hour: 10, minute: 0),
+    this.appLockEnabled = false,
+    this.appLockPin,
     this.isLoading = false,
     this.errorMessage,
   });
@@ -32,6 +36,8 @@ class SettingsState {
     String? theme,
     bool? reminderEnabled,
     TimeOfDay? reminderTime,
+    bool? appLockEnabled,
+    String? appLockPin,
     bool? isLoading,
     String? errorMessage,
   }) {
@@ -43,6 +49,8 @@ class SettingsState {
       theme: theme ?? this.theme,
       reminderEnabled: reminderEnabled ?? this.reminderEnabled,
       reminderTime: reminderTime ?? this.reminderTime,
+      appLockEnabled: appLockEnabled ?? this.appLockEnabled,
+      appLockPin: appLockPin ?? this.appLockPin,
       isLoading: isLoading ?? this.isLoading,
       errorMessage: errorMessage,
     );

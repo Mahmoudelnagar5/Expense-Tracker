@@ -133,5 +133,20 @@
     "trend_analysis": "تحليل الاتجاه",
     "no_records_yet": "لا توجد سجلات بعد",
     "start_tracking_message": "ابدأ بتسجيل مصروفاتك ودخلك لرؤيتها هنا",
-    "add_first_transaction": "أضف معاملتك الأولى"
+    "add_first_transaction": "أضف معاملتك الأولى",
+    "app_lock": "قفل التطبيق",
+    "enable_app_lock": "تفعيل قفل التطبيق",
+    "disable_app_lock": "إلغاء قفل التطبيق",
+    "change_pin": "تغيير الرقم السري",
+    "set_pin": "تعيين الرقم السري",
+    "confirm_pin": "تأكيد الرقم السري",
+    "pin_mismatch": "الأرقام غير متطابقة",
+    "pin_updated": "تم تحديث الرقم السري",
+    "app_lock_enabled": "تم تفعيل قفل التطبيق",
+    "app_lock_disabled": "تم إلغاء قفل التطبيق",
+    "enter_current_pin": "أدخل الرقم السري الحالي",
+    "wrong_pin": "رقم سري غير صحيح",
+    "transaction_details": "تفاصيل المعاملة",
+    "type": "النوع",
+    "notes": "الملاحظات"
 }
