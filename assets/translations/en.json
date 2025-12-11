@@ -52,7 +52,7 @@
     "reports": "Reports",
     "reports_screen": "Reports Screen",
     "coming_soon": "Coming Soon",
-    "arabic": "العربية",
+    "arabic": "Arabic",
     "english": "English",
     "app_themes": "App Themes",
     "notifications": "Notifications",
@@ -148,5 +148,7 @@
     "wrong_pin": "Wrong PIN",
     "transaction_details": "Transaction Details",
     "type": "Type",
-    "notes": "Notes"
+    "notes": "Notes",
+    "no_data_available": "No data available",
+    "categories": "Categories"
 }

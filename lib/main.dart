@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 
 import 'package:flutter/material.dart';
 
 import 'package:expense_tracker_ar/core/helper/database/cache_helper.dart';
 import 'package:expense_tracker_ar/core/helper/database/cache_helper_keks.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'core/services/local_notification_service.dart';
 import 'my_app.dart';
@@ -28,10 +31,12 @@ void main() async {
   // Initialize easy_localization
   await EasyLocalization.ensureInitialized();
 
-  // Defer heavy initializations until after first frame
-  WidgetsBinding.instance.addPostFrameCallback((_) async {
-    await LocalNotificationService.init();
-  });
+  await LocalNotificationService.init();
+  await LocalNotificationService.requestPermission();
+
+  if (Platform.isAndroid) {
+    await Permission.ignoreBatteryOptimizations.request();
+  }
 
   runApp(
     EasyLocalization(

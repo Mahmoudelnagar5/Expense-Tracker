@@ -1,8 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/utils/app_text_styles.dart';
+import '../../../../core/utils/locale_keys.dart';
 
 class CategoryData {
   final String category;
@@ -27,7 +29,7 @@ class CategoryDonutChart extends StatelessWidget {
     if (categoryData.isEmpty) {
       return Center(
         child: Text(
-          'No data available',
+          LocaleKeys.noDataAvailable.tr(),
           style: AppTextStyles.font16BlackMedium,
         ),
       );

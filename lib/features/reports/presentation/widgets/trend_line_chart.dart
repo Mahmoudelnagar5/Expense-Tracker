@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:expense_tracker_ar/core/utils/locale_keys.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,7 +28,7 @@ class TrendLineChart extends StatelessWidget {
     if (incomeData.isEmpty && expenseData.isEmpty) {
       return Center(
         child: Text(
-          'No data available',
+          LocaleKeys.noDataAvailable.tr(),
           style: AppTextStyles.font16BlackMedium,
         ),
       );
@@ -78,7 +80,7 @@ class TrendLineChart extends StatelessWidget {
       ),
       series: <CartesianSeries>[
         SplineSeries<ChartData, String>(
-          name: 'Income',
+          name: LocaleKeys.income.tr(),
           dataSource: incomeData,
           xValueMapper: (ChartData data, _) => data.label,
           yValueMapper: (ChartData data, _) => data.value,
@@ -93,7 +95,7 @@ class TrendLineChart extends StatelessWidget {
           width: 2,
         ),
         SplineSeries<ChartData, String>(
-          name: 'Expense',
+          name: LocaleKeys.expense.tr(),
           dataSource: expenseData,
           xValueMapper: (ChartData data, _) => data.label,
           yValueMapper: (ChartData data, _) => data.value,

@@ -53,7 +53,7 @@
     "reports_screen": "شاشة التقارير",
     "coming_soon": "قريباً",
     "arabic": "العربية",
-    "english": "English",
+    "english": "الإنجليزية",
     "app_themes": "مواضيع التطبيق",
     "notifications": "الإشعارات",
     "backup": "النسخ الاحتياطي",
@@ -148,5 +148,7 @@
     "wrong_pin": "رقم سري غير صحيح",
     "transaction_details": "تفاصيل المعاملة",
     "type": "النوع",
-    "notes": "الملاحظات"
+    "notes": "الملاحظات",
+    "no_data_available": "لا تتوفر بيانات",
+    "categories": "الفئات"
 }

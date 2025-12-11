@@ -1,3 +1,5 @@
+import 'package:expense_tracker_ar/core/utils/locale_keys.dart';
+
 class AppConstants {
   AppConstants._();
 
@@ -266,8 +268,18 @@ class AppConstants {
   ];
 
   static final List<Map<String, String>> languages = [
-    {'name': 'Arabic', 'code': 'ar', 'flag': '🇦🇪'},
-    {'name': 'English', 'code': 'en', 'flag': '🇺🇸'},
+    {
+      'name': 'Arabic',
+      'nameKey': LocaleKeys.arabic,
+      'code': 'ar',
+      'flag': '🇦🇪',
+    },
+    {
+      'name': 'English',
+      'nameKey': LocaleKeys.english,
+      'code': 'en',
+      'flag': '🇺🇸',
+    },
   ];
   static final List<String> paymentTypes = [
     'Cash',

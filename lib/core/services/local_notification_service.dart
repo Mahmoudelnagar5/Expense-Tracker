@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -181,6 +182,10 @@ class LocalNotificationService {
 
   static void cancelNotification(int id) async {
     await flutterLocalNotificationsPlugin.cancel(id);
+  }
+
+  static Future<void> requestPermission() async {
+    await Permission.notification.request();
   }
 
   /// Schedule a daily notification at a specific time

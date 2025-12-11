@@ -104,6 +104,16 @@ class _SetupScreenState extends State<SetupScreen> {
     );
   }
 
+  String _getLanguageName(String? language) {
+    if (language == null) return LocaleKeys.chooseLanguage.tr();
+    final lang = AppConstants.languages.firstWhere(
+      (l) => l['code'] == language,
+      orElse: () => {'nameKey': LocaleKeys.chooseLanguage},
+    );
+    final key = lang['nameKey'];
+    return key != null ? key.tr() : LocaleKeys.chooseLanguage.tr();
+  }
+
   Future<void> _saveUserData() async {
     // Validate form
     if (_formKey.currentState?.validate() != true) {
@@ -332,11 +342,7 @@ class _SetupScreenState extends State<SetupScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            _selectedLanguage != null
-                                ? AppConstants.languages.firstWhere(
-                                    (l) => l['code'] == _selectedLanguage,
-                                  )['name']!
-                                : LocaleKeys.chooseLanguage.tr(),
+                            _getLanguageName(_selectedLanguage),
                             style: context.isDarkMode
                                 ? (AppTextStyles.font14LightGrayRegular
                                       .copyWith(

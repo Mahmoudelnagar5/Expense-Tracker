@@ -88,7 +88,9 @@ class _LanguageDialogState extends State<LanguageDialog> {
                       FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          language['name']!,
+                          language['nameKey'] != null
+                              ? language['nameKey']!.tr()
+                              : language['name']!,
                           style: AppTextStyles.font16BlackMedium.copyWith(
                             fontWeight: FontWeightHelper.semiBold,
                           ),

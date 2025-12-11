@@ -184,9 +184,10 @@ class SettingsScreen extends StatelessWidget {
     if (language == null) return LocaleKeys.chooseLanguage.tr();
     final lang = AppConstants.languages.firstWhere(
       (l) => l['code'] == language,
-      orElse: () => {'name': LocaleKeys.chooseLanguage.tr()},
+      orElse: () => {'nameKey': LocaleKeys.chooseLanguage},
     );
-    return lang['name'] ?? LocaleKeys.chooseLanguage.tr();
+    final key = lang['nameKey'];
+    return key != null ? key.tr() : LocaleKeys.chooseLanguage.tr();
   }
 
   String _getThemeName(String? theme) {

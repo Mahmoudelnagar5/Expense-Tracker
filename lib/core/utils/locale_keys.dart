@@ -150,4 +150,6 @@ class LocaleKeys {
   static const String transactionDetails = 'transaction_details';
   static const String type = 'type';
   static const String notes = 'notes';
+  static const String noDataAvailable = 'no_data_available';
+  static const String categories = 'categories';
 }

@@ -1,5 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../../core/utils/locale_keys.dart';
 
 class ChartLegendWidget extends StatelessWidget {
   final Map<String, double> categoryData;
@@ -18,7 +21,7 @@ class ChartLegendWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            'Categories',
+            LocaleKeys.categories.tr(),
             style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.bold,

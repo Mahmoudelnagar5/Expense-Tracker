@@ -1,8 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/utils/app_text_styles.dart';
+import '../../../../core/utils/locale_keys.dart';
 
 class ExpensePieChart extends StatefulWidget {
   final Map<String, double> categoryData;
@@ -21,7 +23,7 @@ class _ExpensePieChartState extends State<ExpensePieChart> {
     if (widget.categoryData.isEmpty) {
       return Center(
         child: Text(
-          'No data available',
+          LocaleKeys.noDataAvailable.tr(),
           style: AppTextStyles.font16BlackMedium,
         ),
       );
