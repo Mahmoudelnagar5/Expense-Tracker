@@ -110,8 +110,8 @@
     "day": "يوم",
     "month": "شهر",
     "year": "سنة",
-    "backup_description": "حفظ بياناتك على السحابة.",
-    "restore_description": "استعادة بياناتك من السحابة.",
+    "backup_description": "حفظ بياناتك على الجهاز.",
+    "restore_description": "استعادة بياناتك من الجهاز.",
     "edit_username": "تعديل اسم المستخدم",
     "enter_username": "أدخل اسم المستخدم",
     "username_updated": "تم تحديث اسم المستخدم بنجاح",
@@ -150,5 +150,11 @@
     "type": "النوع",
     "notes": "الملاحظات",
     "no_data_available": "لا تتوفر بيانات",
-    "categories": "الفئات"
+    "categories": "الفئات",
+    "backup_created_successfully": "تم إنشاء النسخة الاحتياطية بنجاح!",
+    "backup_failed": "فشل في إنشاء النسخة الاحتياطية",
+    "backup_error": "فشل النسخ الاحتياطي",
+    "restore_successful": "تم استعادة البيانات بنجاح! يرجى إعادة تشغيل التطبيق.",
+    "restore_failed": "فشل في استعادة البيانات",
+    "restore_error": "فشل الاستعادة"
 }

@@ -152,4 +152,10 @@ class LocaleKeys {
   static const String notes = 'notes';
   static const String noDataAvailable = 'no_data_available';
   static const String categories = 'categories';
+  static const String backupCreatedSuccessfully = 'backup_created_successfully';
+  static const String backupFailed = 'backup_failed';
+  static const String backupError = 'backup_error';
+  static const String restoreSuccessful = 'restore_successful';
+  static const String restoreFailed = 'restore_failed';
+  static const String restoreError = 'restore_error';
 }

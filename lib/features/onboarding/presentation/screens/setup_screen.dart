@@ -214,6 +214,7 @@ class _SetupScreenState extends State<SetupScreen> {
       backgroundColor: context.backgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
           child: Form(
             key: _formKey,

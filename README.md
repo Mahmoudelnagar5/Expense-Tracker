@@ -12,7 +12,7 @@ A beautiful, feature-rich expense tracking application built with Flutter
 [![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20Web%20%7C%20Desktop-blueviolet?style=for-the-badge)]()
 
 <p align="center">
-  <img src="assets/images/app.jpg" alt="Expense Tracker Logo" width="150"/>
+  <img src="assets/images/app.jpg" alt="Expense Tracker Logo" width="500"/>
 </p>
 
 
@@ -56,8 +56,8 @@ A beautiful, feature-rich expense tracking application built with Flutter
 - 📅 **Background Scheduling** - Works even when app is closed
 
 ### 💾 **Data Management**
-- 📤 **Backup** - Save your data securely
-- 📥 **Restore** - Recover your data anytime
+- 📤 **Backup** - Save your data securely to JSON file and share
+- 📥 **Restore** - Recover your data from backup file
 - 🗄️ **SQLite Database** - Fast and reliable local storage
 
 ---
@@ -190,6 +190,9 @@ flutter build web --release
 | `flutter_screenutil` | Responsive UI |
 | `image_picker` | Camera & gallery access |
 | `permission_handler` | Runtime permissions |
+| `path_provider` | File system access |
+| `share_plus` | Share backup files |
+| `file_picker` | Select backup files for restore |
 
 ---
 

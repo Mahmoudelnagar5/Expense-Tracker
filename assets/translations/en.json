@@ -110,8 +110,8 @@
     "day": "Day",
     "month": "Month",
     "year": "Year",
-    "backup_description": "Save your data to the cloud.",
-    "restore_description": "Restore your data from the cloud.",
+    "backup_description": "Save your data to the device.",
+    "restore_description": "Restore your data from the device.",
     "edit_username": "Edit Username",
     "enter_username": "Enter Username",
     "username_updated": "Username updated successfully",
@@ -150,5 +150,11 @@
     "type": "Type",
     "notes": "Notes",
     "no_data_available": "No data available",
-    "categories": "Categories"
+    "categories": "Categories",
+    "backup_created_successfully": "Backup created successfully!",
+    "backup_failed": "Failed to create backup",
+    "backup_error": "Backup failed",
+    "restore_successful": "Data restored successfully! Please restart the app.",
+    "restore_failed": "Failed to restore data",
+    "restore_error": "Restore failed"
 }
