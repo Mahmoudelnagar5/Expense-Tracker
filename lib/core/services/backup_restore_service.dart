@@ -38,7 +38,20 @@ class BackupRestoreService {
       for (var key in keys) {
         final value = cacheHelper.getData(key: key);
         if (value != null) {
-          preferences[key] = value;
+          // Special handling for image profile - encode as Base64
+          if (key == CacheHelperKeys.imageProfile && value is String) {
+            final imageFile = File(value);
+            if (await imageFile.exists()) {
+              final imageBytes = await imageFile.readAsBytes();
+              final base64Image = base64Encode(imageBytes);
+              preferences['${key}_base64'] = base64Image;
+              // Also save the file extension for proper restoration
+              final extension = value.split('.').last;
+              preferences['${key}_extension'] = extension;
+            }
+          } else {
+            preferences[key] = value;
+          }
         }
       }
 
@@ -126,7 +139,35 @@ class BackupRestoreService {
       final preferences = backupData['preferences'] as Map<String, dynamic>;
       final cacheHelper = CacheHelper();
 
+      // Handle profile image restoration separately
+      if (preferences.containsKey('${CacheHelperKeys.imageProfile}_base64')) {
+        final base64Image =
+            preferences['${CacheHelperKeys.imageProfile}_base64'] as String;
+        final extension =
+            preferences['${CacheHelperKeys.imageProfile}_extension'] as String?;
+        final fileExtension = extension ?? 'jpg';
+
+        // Decode and save image to app documents directory
+        final imageBytes = base64Decode(base64Image);
+        final appDir = await getApplicationDocumentsDirectory();
+        final imagePath =
+            '${appDir.path}/profile_image_${DateTime.now().millisecondsSinceEpoch}.$fileExtension';
+        final imageFile = File(imagePath);
+        await imageFile.writeAsBytes(imageBytes);
+
+        // Save the new image path to cache
+        await cacheHelper.saveData(
+          key: CacheHelperKeys.imageProfile,
+          value: imagePath,
+        );
+      }
+
+      // Restore other preferences (skip the Base64 image data keys)
       for (var entry in preferences.entries) {
+        // Skip the special image keys - already handled above
+        if (entry.key.contains('_base64') || entry.key.contains('_extension')) {
+          continue;
+        }
         await cacheHelper.saveData(key: entry.key, value: entry.value);
       }
 
