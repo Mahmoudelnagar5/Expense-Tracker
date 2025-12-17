@@ -12,7 +12,9 @@ A beautiful, feature-rich expense tracking application built with Flutter
 [![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20Web%20%7C%20Desktop-blueviolet?style=for-the-badge)]()
 
 <p align="center">
-  <img src="assets/images/app.jpg" alt="Expense Tracker Logo" width="500"/>
+  <!-- <img src="assets/images/app.jpg" alt="Expense Tracker Logo" width="500"/> -->
+  <img width="298" height="178" alt="image" src="https://github.com/user-attachments/assets/d172786e-23f1-412b-a5eb-206ff0d54b99" />
+
 </p>
 
 
@@ -66,60 +68,15 @@ A beautiful, feature-rich expense tracking application built with Flutter
 
 <div align="center">
 
-| Home Screen | Add Transaction | Reports |
-|:-----------:|:---------------:|:-------:|
-| *Coming Soon* | *Coming Soon* | *Coming Soon* |
+<img width="900" height="690" alt="image" src="https://github.com/user-attachments/assets/f658426c-1875-456f-9f15-581a45ee01e9" />
+<img width="921" height="694" alt="image" src="https://github.com/user-attachments/assets/7fdeb932-1dee-4ddd-a52e-6ecad4b27493" />
+<img width="941" height="679" alt="image" src="https://github.com/user-attachments/assets/98c0a900-8cfd-441b-9ca8-eafe2ca0b843" />
+<img width="886" height="673" alt="image" src="https://github.com/user-attachments/assets/af8a0f37-c896-40bc-8aec-b1b12c2dd04d" />
+<img width="929" height="690" alt="image" src="https://github.com/user-attachments/assets/cedac474-a87f-4252-b2a4-f106347e2610" />
 
-| Settings | Categories | Transaction Details |
-|:--------:|:----------:|:-------------------:|
-| *Coming Soon* | *Coming Soon* | *Coming Soon* |
+
 
 </div>
-
----
-
-## 🚀 Installation
-
-### Prerequisites
-
-- Flutter SDK `^3.9.2`
-- Dart SDK `^3.0.0`
-- Android Studio / VS Code
-- Git
-
-### Setup
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/Mahmoudelnagar5/Expense-Tracker.git
-   cd Expense-Tracker
-   ```
-
-2. **Install dependencies**
-   ```bash
-   flutter pub get
-   ```
-
-3. **Run the app**
-   ```bash
-   flutter run
-   ```
-
-### Build for Production
-
-```bash
-# Android APK
-flutter build apk --release
-
-# Android App Bundle
-flutter build appbundle --release
-
-# iOS
-flutter build ios --release
-
-# Web
-flutter build web --release
-```
 
 ---
 
@@ -284,6 +241,49 @@ The app supports multiple languages with RTL support:
 
 ---
 
+## 🚀 Installation
+
+### Prerequisites
+
+- Flutter SDK `^3.9.2`
+- Dart SDK `^3.0.0`
+- Android Studio / VS Code
+- Git
+
+### Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Mahmoudelnagar5/Expense-Tracker.git
+   cd Expense-Tracker
+   ```
+
+2. **Install dependencies**
+   ```bash
+   flutter pub get
+   ```
+
+3. **Run the app**
+   ```bash
+   flutter run
+   ```
+
+### Build for Production
+
+```bash
+# Android APK
+flutter build apk --release
+
+# Android App Bundle
+flutter build appbundle --release
+
+# iOS
+flutter build ios --release
+
+# Web
+flutter build web --release
+```
+---
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
